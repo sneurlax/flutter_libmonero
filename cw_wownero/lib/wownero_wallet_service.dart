@@ -65,13 +65,15 @@ class WowneroWalletService extends WalletService<
   WalletType getType() => WalletType.wownero;
 
   @override
-  Future<WowneroWallet> create(WowneroNewWalletCredentials credentials) async {
+  Future<WowneroWallet> create(WowneroNewWalletCredentials credentials,
+      {int nettype = 0}) async {
     try {
       final path = await pathForWallet(name: credentials.name!, type: getType());
       await wownero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
-          language: credentials.language);
+          language: credentials.language,
+          nettype: nettype);
       final wallet = WowneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
