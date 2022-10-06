@@ -32,12 +32,13 @@ class WalletCreationService {
     _service = walletService;
   }
 
-  Future<WalletBase> create(WalletCredentials credentials) async {
+  Future<WalletBase> create(WalletCredentials credentials,
+      {int nettype = 0}) async {
     final password = generatePassword();
     credentials.password = password;
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.create(credentials);
+    return await _service!.create(credentials, nettype: nettype);
   }
 
   Future<WalletBase> restoreFromKeys(WalletCredentials credentials) async {
