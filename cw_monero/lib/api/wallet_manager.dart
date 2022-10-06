@@ -159,8 +159,10 @@ void _createWallet(Map<String, dynamic> args) {
   final path = args['path'] as String;
   final password = args['password'] as String;
   final language = args['language'] as String;
+  final nettype = args['nettype'] as int;
 
-  createWalletSync(path: path, password: password, language: language);
+  createWalletSync(
+      path: path, password: password, language: language, nettype: nettype);
 }
 
 void _restoreFromSeed(Map<String, dynamic> args) {
