@@ -169,10 +169,15 @@ void _restoreFromSeed(Map<String, dynamic> args) {
   final path = args['path'] as String;
   final password = args['password'] as String;
   final seed = args['seed'] as String;
+  final nettype = args['nettype'] as int;
   final restoreHeight = args['restoreHeight'] as int?;
 
   restoreWalletFromSeedSync(
-      path: path, password: password, seed: seed, restoreHeight: restoreHeight);
+      path: path,
+      password: password,
+      seed: seed,
+      nettype: nettype,
+      restoreHeight: restoreHeight);
 }
 
 void _restoreFromKeys(Map<String, dynamic> args) {
