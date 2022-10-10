@@ -3,6 +3,7 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/monero_wallet_utils.dart';
 import 'package:hive/hive.dart';
+import 'package:stackwallet/hive/db.dart';
 import 'package:cw_monero/api/wallet_manager.dart' as monero_wallet_manager;
 import 'package:cw_monero/api/wallet.dart' as monero_wallet;
 import 'package:cw_monero/api/exceptions/wallet_opening_exception.dart';
@@ -118,8 +119,28 @@ class MoneroWalletService extends WalletService<
     try {
       final path = await pathForWallet(
           name: name,
-          type:
-              getType(nettype)); // but where are we getting / passing nettype?
+      // Find coin name for nettype (monero, moneroStageNet, moneroTestNet, etc) by calling the database for all wallet names and use the name param to find the coin ... Not a good solution, hacky, need to find better way to find the coin/nettype here
+      final _names = DB.instance.get<dynamic>(
+          boxName: DB.boxNameAllWalletsData, key: 'names') as Map?;
+
+      Map<String, dynamic> names;
+      if (_names == null) {
+        names = {};
+      } else {
+        names = Map<String, dynamic>.from(_names);
+      }
+
+      var type = WalletType.monero;
+
+      if (names[name]['coin'] == 'moneroStageNet') {
+        nettype = 2;
+        type = WalletType.moneroStageNet;
+      } else if (names[name]['coin'] == 'moneroTestNet') {
+        nettype = 1;
+        type = WalletType.moneroTestNet;
+      }
+
+      final path = await pathForWallet(name: name, type: type);
 
       if (walletFilesExist(path)) {
         await repairOldAndroidWallet(name);
@@ -127,8 +148,8 @@ class MoneroWalletService extends WalletService<
 
       await monero_wallet_manager.openWalletAsync(
           {'path': path, 'password': password, 'nettype': nettype});
-      final walletInfo = walletInfoSource.values.firstWhereOrNull(
-          (info) => info.id == WalletBase.idFor(name, getType(nettype)))!;
+      final walletInfo = walletInfoSource.values
+          .firstWhereOrNull((info) => info.id == WalletBase.idFor(name, type))!;
       final wallet = MoneroWallet(walletInfo: walletInfo);
       final isValid = wallet.walletAddresses.validate();
 
