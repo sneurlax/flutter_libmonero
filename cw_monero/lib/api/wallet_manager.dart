@@ -39,7 +39,10 @@ final errorStringNative = moneroApi
     .asFunction<ErrorString>();
 
 void createWalletSync(
-    {required String path, required String password, required String language, int nettype = 0}) {
+    {required String path,
+    required String password,
+    required String language,
+    int nettype = 0}) {
   final pathPointer = path.toNativeUtf8();
   final passwordPointer = password.toNativeUtf8();
   final languagePointer = language.toNativeUtf8();
@@ -142,7 +145,8 @@ void restoreWalletFromKeysSync(
   }
 }
 
-void loadWallet({required String path, required String password, int nettype = 0}) {
+void loadWallet(
+    {required String path, required String password, int nettype = 0}) {
   final pathPointer = path.toNativeUtf8();
   final passwordPointer = password.toNativeUtf8();
   final loaded = loadWalletNative(pathPointer, passwordPointer, nettype) != 0;
@@ -199,12 +203,17 @@ void _restoreFromKeys(Map<String, dynamic> args) {
       spendKey: spendKey);
 }
 
-Future<void> _openWallet(Map<String, String> args) async =>
-    loadWallet(path: args['path']!, password: args['password']!, nettype: int.parse(args['nettype']!));
+Future<void> _openWallet(Map<String, String> args) async => loadWallet(
+    path: args['path']!,
+    password: args['password']!,
+    nettype: int.parse(args['nettype']!));
 
 bool _isWalletExist(String? path) => isWalletExistSync(path: path!);
 
-void openWallet({required String path, required String password, int nettype = 0}) async =>
+void openWallet(
+        {required String path,
+        required String password,
+        int nettype = 0}) async =>
     loadWallet(path: path, password: password, nettype: nettype);
 
 Future<void> openWalletAsync(Map<String, String> args) async =>
