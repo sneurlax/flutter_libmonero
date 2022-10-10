@@ -216,8 +216,7 @@ void openWallet(
         int nettype = 0}) async =>
     loadWallet(path: path, password: password, nettype: nettype);
 
-Future<void> openWalletAsync(Map<String, String> args) async =>
-    compute(_openWallet, args);
+Future<void> openWalletAsync(args) async => compute(_openWallet, args);
 
 Future<void> createWallet(
         {String? path,
