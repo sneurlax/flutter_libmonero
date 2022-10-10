@@ -58,7 +58,7 @@ class MoneroWalletService extends WalletService<
   MoneroWalletService(this.walletInfoSource);
 
   final Box<WalletInfo> walletInfoSource;
-  
+
   static bool walletFilesExist(String path) =>
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
@@ -164,12 +164,12 @@ class MoneroWalletService extends WalletService<
       // TODO: Implement Exception for wallet list service.
 
       if ((e.toString().contains('bad_alloc') ||
-          (e is WalletOpeningException &&
-              (e.message == 'std::bad_alloc' ||
-                  e.message!.contains('bad_alloc')))) ||
+              (e is WalletOpeningException &&
+                  (e.message == 'std::bad_alloc' ||
+                      e.message!.contains('bad_alloc')))) ||
           (e.toString().contains('does not correspond') ||
-          (e is WalletOpeningException &&
-            e.message!.contains('does not correspond')))) {
+              (e is WalletOpeningException &&
+                  e.message!.contains('does not correspond')))) {
         await restoreOrResetWalletFiles(name);
         return openWallet(name, password, nettype);
       }
