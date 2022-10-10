@@ -99,7 +99,8 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<MoneroWallet> openWallet(String name, String password) async {
+  Future<MoneroWallet> openWallet(String name, String password,
+      [int nettype = 0]) async {
     try {
       final path = await pathForWallet(name: name, type: getType());
 
@@ -107,8 +108,8 @@ class MoneroWalletService extends WalletService<
         await repairOldAndroidWallet(name);
       }
 
-      await monero_wallet_manager
-          .openWalletAsync({'path': path, 'password': password});
+      await monero_wallet_manager.openWalletAsync(
+          {'path': path, 'password': password, 'nettype': nettype});
       final walletInfo = walletInfoSource.values.firstWhereOrNull(
           (info) => info.id == WalletBase.idFor(name, getType()))!;
       final wallet = MoneroWallet(walletInfo: walletInfo);
@@ -117,7 +118,7 @@ class MoneroWalletService extends WalletService<
       if (!isValid) {
         await restoreOrResetWalletFiles(name);
         wallet.close();
-        return openWallet(name, password);
+        return openWallet(name, password, nettype);
       }
 
       await wallet.init();
@@ -134,7 +135,7 @@ class MoneroWalletService extends WalletService<
           (e is WalletOpeningException &&
             e.message!.contains('does not correspond')))) {
         await restoreOrResetWalletFiles(name);
-        return openWallet(name, password);
+        return openWallet(name, password, nettype);
       }
 
       rethrow;

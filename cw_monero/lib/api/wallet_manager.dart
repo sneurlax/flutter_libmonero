@@ -203,10 +203,10 @@ void _restoreFromKeys(Map<String, dynamic> args) {
       spendKey: spendKey);
 }
 
-Future<void> _openWallet(Map<String, String> args) async => loadWallet(
+Future<void> _openWallet(args) async => loadWallet(
     path: args['path']!,
     password: args['password']!,
-    nettype: int.parse(args['nettype']!));
+    nettype: args['nettype']! ?? 0);
 
 bool _isWalletExist(String? path) => isWalletExistSync(path: path!);
 
