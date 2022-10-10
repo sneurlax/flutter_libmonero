@@ -8,9 +8,9 @@ abstract class WalletService<N extends WalletCredentials,
 
   Future<WalletBase> create(N credentials, {int nettype = 0});
 
-  Future<WalletBase> restoreFromSeed(RFS credentials);
+  Future<WalletBase> restoreFromSeed(RFS credentials, {int nettype = 0});
 
-  Future<WalletBase> restoreFromKeys(RFK credentials);
+  Future<WalletBase> restoreFromKeys(RFK credentials, {int nettype = 0});
 
   Future<WalletBase> openWallet(String name, String password,
       [int nettype = 0]);

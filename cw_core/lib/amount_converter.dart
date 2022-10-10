@@ -53,6 +53,10 @@ class AmountConverter {
       case CryptoCurrency.xnzd:
       case CryptoCurrency.xusd:
         return _moneroAmountToDouble(amount);
+      case CryptoCurrency.sxmr:
+        return _moneroAmountToDouble(amount);
+      case CryptoCurrency.txmr:
+        return _moneroAmountToDouble(amount);
       default:
         return null;
     }
@@ -78,6 +82,10 @@ class AmountConverter {
       case CryptoCurrency.xnok:
       case CryptoCurrency.xnzd:
       case CryptoCurrency.xusd:
+        return _moneroParseAmount(amount);
+      case CryptoCurrency.sxmr:
+        return _moneroParseAmount(amount);
+      case CryptoCurrency.txmr:
         return _moneroParseAmount(amount);
       default:
         return null;
@@ -107,12 +115,17 @@ class AmountConverter {
       case CryptoCurrency.xnzd:
       case CryptoCurrency.xusd:
         return _moneroAmountToString(amount);
+      case CryptoCurrency.sxmr:
+        return _moneroAmountToString(amount);
+      case CryptoCurrency.txmr:
+        return _moneroAmountToString(amount);
       default:
         return null;
     }
   }
 
-  static double cryptoAmountToDouble({required num amount, required num divider}) =>
+  static double cryptoAmountToDouble(
+          {required num amount, required num divider}) =>
       amount / divider;
 
   static String _moneroAmountToString(int amount) => _moneroAmountFormat.format(
@@ -124,8 +137,9 @@ class AmountConverter {
   static int _moneroParseAmount(String amount) =>
       _moneroAmountFormat.parse(amount).toInt();
 
-  static String _wowneroAmountToString(int amount) => _wowneroAmountFormat.format(
-      cryptoAmountToDouble(amount: amount, divider: _wowneroAmountDivider));
+  static String _wowneroAmountToString(int amount) =>
+      _wowneroAmountFormat.format(
+          cryptoAmountToDouble(amount: amount, divider: _wowneroAmountDivider));
 
   static double _wowneroAmountToDouble(int amount) =>
       cryptoAmountToDouble(amount: amount, divider: _wowneroAmountDivider);
