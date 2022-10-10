@@ -63,6 +63,10 @@ class Node extends HiveObject with Keyable {
         return Uri.http(uriRaw!, '');
       case WalletType.wownero:
         return Uri.http(uriRaw!, '');
+      case WalletType.moneroStageNet:
+        return Uri.http(uriRaw!, '');
+      case WalletType.moneroTestNet:
+        return Uri.http(uriRaw!, '');
       default:
         return null;
     }
@@ -85,6 +89,8 @@ class Node extends HiveObject with Keyable {
       switch (type) {
         case WalletType.monero:
         case WalletType.wownero:
+        case WalletType.moneroStageNet:
+        case WalletType.moneroTestNet:
           return requestMoneroNode();
         case WalletType.bitcoin:
           return requestElectrumServer();

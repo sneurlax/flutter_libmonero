@@ -192,6 +192,9 @@ abstract class OutputBase with Store {
 
     switch (_wallet.type) {
       case WalletType.monero:
+      case WalletType.wownero:
+      case WalletType.moneroStageNet:
+      case WalletType.moneroTestNet:
         maximumFractionDigits = 12;
         break;
       case WalletType.bitcoin:
@@ -201,9 +204,6 @@ abstract class OutputBase with Store {
         maximumFractionDigits = 8;
         break;
       case WalletType.haven:
-        maximumFractionDigits = 12;
-        break;
-      case WalletType.wownero:
         maximumFractionDigits = 12;
         break;
       default:

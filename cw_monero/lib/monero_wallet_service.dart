@@ -62,14 +62,28 @@ class MoneroWalletService extends WalletService<
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
   @override
-  WalletType getType() => WalletType.monero;
+  WalletType getType([int nettype = 0]) {
+    if (nettype == 1) {
+      return WalletType.moneroTestNet;
+    } else if (nettype == 2) {
+      return WalletType.moneroStageNet;
+    } else {
+      return WalletType.monero;
+    }
+  }
 
   @override
   Future<MoneroWallet> create(MoneroNewWalletCredentials credentials,
       {int nettype = 0}) async {
+    if (credentials.walletInfo?.type == WalletType.moneroTestNet) {
+      nettype = 1;
+    } else if (credentials.walletInfo?.type == WalletType.moneroStageNet) {
+      nettype = 2;
+    }
+
     try {
       final path =
-          await pathForWallet(name: credentials.name!, type: getType());
+          await pathForWallet(name: credentials.name!, type: getType(nettype));
       await monero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
@@ -102,7 +116,10 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> openWallet(String name, String password,
       [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: name, type: getType());
+      final path = await pathForWallet(
+          name: name,
+          type:
+              getType(nettype)); // but where are we getting / passing nettype?
 
       if (walletFilesExist(path)) {
         await repairOldAndroidWallet(name);
@@ -111,7 +128,7 @@ class MoneroWalletService extends WalletService<
       await monero_wallet_manager.openWalletAsync(
           {'path': path, 'password': password, 'nettype': nettype});
       final walletInfo = walletInfoSource.values.firstWhereOrNull(
-          (info) => info.id == WalletBase.idFor(name, getType()))!;
+          (info) => info.id == WalletBase.idFor(name, getType(nettype)))!;
       final wallet = MoneroWallet(walletInfo: walletInfo);
       final isValid = wallet.walletAddresses.validate();
 
@@ -155,9 +172,11 @@ class MoneroWalletService extends WalletService<
 
   @override
   Future<MoneroWallet> restoreFromKeys(
-      MoneroRestoreWalletFromKeysCredentials credentials) async {
+      MoneroRestoreWalletFromKeysCredentials credentials,
+      {int nettype = 0}) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path =
+          await pathForWallet(name: credentials.name!, type: getType(nettype));
       await monero_wallet_manager.restoreFromKeys(
           path: path,
           password: credentials.password,
@@ -165,7 +184,8 @@ class MoneroWalletService extends WalletService<
           restoreHeight: credentials.height,
           address: credentials.address,
           viewKey: credentials.viewKey,
-          spendKey: credentials.spendKey);
+          spendKey: credentials.spendKey,
+          nettype: nettype);
       final wallet = MoneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
@@ -179,14 +199,17 @@ class MoneroWalletService extends WalletService<
 
   @override
   Future<MoneroWallet> restoreFromSeed(
-      MoneroRestoreWalletFromSeedCredentials credentials) async {
+      MoneroRestoreWalletFromSeedCredentials credentials,
+      {int nettype = 0}) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path =
+          await pathForWallet(name: credentials.name!, type: getType(nettype));
       await monero_wallet_manager.restoreFromSeed(
           path: path,
           password: credentials.password,
           seed: credentials.mnemonic,
-          restoreHeight: credentials.height);
+          restoreHeight: credentials.height,
+          nettype: nettype);
       final wallet = MoneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
