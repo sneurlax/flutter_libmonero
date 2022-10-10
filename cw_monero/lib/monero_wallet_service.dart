@@ -117,8 +117,6 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> openWallet(String name, String password,
       [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(
-          name: name,
       // Find coin name for nettype (monero, moneroStageNet, moneroTestNet, etc) by calling the database for all wallet names and use the name param to find the coin ... Not a good solution, hacky, need to find better way to find the coin/nettype here
       final _names = DB.instance.get<dynamic>(
           boxName: DB.boxNameAllWalletsData, key: 'names') as Map?;
