@@ -27,8 +27,14 @@ class WalletCreationService {
   final KeyService? keyService;
   WalletService? _service;
 
-  void changeWalletType() {
-    this.type = WalletType.monero;
+  void changeWalletType({int nettype = 0}) {
+    if (nettype == 0) {
+      this.type = WalletType.monero;
+    } else if (nettype == 1) {
+      this.type = WalletType.moneroTestNet;
+    } else if (nettype == 2) {
+      this.type = WalletType.moneroStageNet;
+    }
     _service = walletService;
   }
 
@@ -41,19 +47,21 @@ class WalletCreationService {
     return await _service!.create(credentials, nettype: nettype);
   }
 
-  Future<WalletBase> restoreFromKeys(WalletCredentials credentials) async {
+  Future<WalletBase> restoreFromKeys(WalletCredentials credentials,
+      {int nettype = 0}) async {
     final password = generatePassword();
     credentials.password = password;
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.restoreFromKeys(credentials);
+    return await _service!.restoreFromKeys(credentials, nettype: nettype);
   }
 
-  Future<WalletBase> restoreFromSeed(WalletCredentials credentials) async {
+  Future<WalletBase> restoreFromSeed(WalletCredentials credentials,
+      {int nettype = 0}) async {
     final password = generatePassword();
     credentials.password = password;
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.restoreFromSeed(credentials);
+    return await _service!.restoreFromSeed(credentials, nettype: nettype);
   }
 }
