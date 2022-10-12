@@ -88,7 +88,7 @@ class MoneroWalletService extends WalletService<
       await monero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
-          language: credentials.language,
+          language: credentials.language ?? 'English',
           nettype: nettype);
       final wallet = MoneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
@@ -146,6 +146,7 @@ class MoneroWalletService extends WalletService<
 
       await monero_wallet_manager.openWalletAsync(
           {'path': path, 'password': password, 'nettype': nettype});
+
       final walletInfo = walletInfoSource.values
           .firstWhereOrNull((info) => info.id == WalletBase.idFor(name, type))!;
       final wallet = MoneroWallet(walletInfo: walletInfo);
