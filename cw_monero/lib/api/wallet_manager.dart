@@ -181,7 +181,7 @@ void _restoreFromSeed(Map<String, dynamic> args) {
       password: password,
       seed: seed,
       nettype: nettype,
-      restoreHeight: restoreHeight);
+      restoreHeight: restoreHeight ?? 0);
 }
 
 void _restoreFromKeys(Map<String, dynamic> args) {
