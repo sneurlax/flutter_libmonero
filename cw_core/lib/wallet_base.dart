@@ -20,7 +20,7 @@ abstract class WalletBase<
   WalletBase(this.walletInfo);
 
   static String idFor(String name, WalletType type) =>
-      walletTypeToString(type).toLowerCase() + '_' + name;
+      '${walletTypeToString(type).toLowerCase()}_$name';
 
   WalletInfo walletInfo;
 
