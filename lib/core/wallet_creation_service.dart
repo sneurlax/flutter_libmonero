@@ -49,6 +49,7 @@ class WalletCreationService {
 
   Future<WalletBase> restoreFromKeys(WalletCredentials credentials,
       {int nettype = 0}) async {
+    // Probably positional like restoreFromSeed
     final password = generatePassword();
     credentials.password = password;
     await keyService!
@@ -57,7 +58,7 @@ class WalletCreationService {
   }
 
   Future<WalletBase> restoreFromSeed(WalletCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
     await keyService!
