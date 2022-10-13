@@ -10,8 +10,14 @@ String backupFileName(String originalPath) {
   return pathParts.join('/');
 }
 
-Future<void> backupWalletFiles(String name) async {
-  final path = await pathForWallet(name: name, type: WalletType.monero);
+Future<void> backupWalletFiles(String name, [int nettype = 0]) async {
+  WalletType type = WalletType.monero;
+  if (nettype == 1) {
+    type = WalletType.moneroTestNet;
+  } else if (nettype == 2) {
+    type = WalletType.moneroStageNet;
+  }
+  final path = await pathForWallet(name: name, type: type);
   final cacheFile = File(path);
   final keysFile = File('$path.keys');
   final addressListFile = File('$path.address.txt');
@@ -32,8 +38,14 @@ Future<void> backupWalletFiles(String name) async {
   }
 }
 
-Future<void> restoreWalletFiles(String name) async {
-  final walletDirPath = await pathForWalletDir(name: name, type: WalletType.monero);
+Future<void> restoreWalletFiles(String name, [int nettype = 0]) async {
+  WalletType type = WalletType.monero;
+  if (nettype == 1) {
+    type = WalletType.moneroTestNet;
+  } else if (nettype == 2) {
+    type = WalletType.moneroStageNet;
+  }
+  final walletDirPath = await pathForWalletDir(name: name, type: type);
   final cacheFilePath = '$walletDirPath/$name';
   final keysFilePath = '$walletDirPath/$name.keys';
   final addressListFilePath = '$walletDirPath/$name.address.txt';
@@ -54,8 +66,14 @@ Future<void> restoreWalletFiles(String name) async {
   }
 }
 
-Future<bool> backupWalletFilesExists(String name) async {
-  final walletDirPath = await pathForWalletDir(name: name, type: WalletType.monero);
+Future<bool> backupWalletFilesExists(String name, [int nettype = 0]) async {
+  WalletType type = WalletType.monero;
+  if (nettype == 1) {
+    type = WalletType.moneroTestNet;
+  } else if (nettype == 2) {
+    type = WalletType.moneroStageNet;
+  }
+  final walletDirPath = await pathForWalletDir(name: name, type: type);
   final cacheFilePath = '$walletDirPath/$name';
   final keysFilePath = '$walletDirPath/$name.keys';
   final addressListFilePath = '$walletDirPath/$name.address.txt';
@@ -63,13 +81,19 @@ Future<bool> backupWalletFilesExists(String name) async {
   final backupKeysFile = File(backupFileName(keysFilePath));
   final backupAddressListFile = File(backupFileName(addressListFilePath));
 
-  return backupCacheFile.existsSync()
-    && backupKeysFile.existsSync()
-    && backupAddressListFile.existsSync();
+  return backupCacheFile.existsSync() &&
+      backupKeysFile.existsSync() &&
+      backupAddressListFile.existsSync();
 }
 
-Future<void> removeCache(String name) async {
-  final path = await pathForWallet(name: name, type: WalletType.monero);
+Future<void> removeCache(String name, [int nettype = 0]) async {
+  WalletType type = WalletType.monero;
+  if (nettype == 1) {
+    type = WalletType.moneroTestNet;
+  } else if (nettype == 2) {
+    type = WalletType.moneroStageNet;
+  }
+  final path = await pathForWallet(name: name, type: type);
   final cacheFile = File(path);
 
   if (cacheFile.existsSync()) {
