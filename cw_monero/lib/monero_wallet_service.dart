@@ -75,7 +75,7 @@ class MoneroWalletService extends WalletService<
 
   @override
   Future<MoneroWallet> create(MoneroNewWalletCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     if (credentials.walletInfo?.type == WalletType.moneroTestNet) {
       nettype = 1;
     } else if (credentials.walletInfo?.type == WalletType.moneroStageNet) {
@@ -193,7 +193,7 @@ class MoneroWalletService extends WalletService<
   @override
   Future<MoneroWallet> restoreFromKeys(
       MoneroRestoreWalletFromKeysCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     try {
       final path =
           await pathForWallet(name: credentials.name!, type: getType(nettype));
@@ -220,7 +220,7 @@ class MoneroWalletService extends WalletService<
   @override
   Future<MoneroWallet> restoreFromSeed(
       MoneroRestoreWalletFromSeedCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     try {
       final path =
           await pathForWallet(name: credentials.name!, type: getType(nettype));

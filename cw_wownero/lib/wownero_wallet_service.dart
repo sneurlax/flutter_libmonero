@@ -66,7 +66,7 @@ class WowneroWalletService extends WalletService<
 
   @override
   Future<WowneroWallet> create(WowneroNewWalletCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     try {
       final path =
           await pathForWallet(name: credentials.name!, type: getType());
@@ -158,7 +158,7 @@ class WowneroWalletService extends WalletService<
   @override
   Future<WowneroWallet> restoreFromKeys(
       WowneroRestoreWalletFromKeysCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     try {
       final path =
           await pathForWallet(name: credentials.name!, type: getType());
@@ -186,7 +186,7 @@ class WowneroWalletService extends WalletService<
   @override
   Future<WowneroWallet> restoreFromSeed(
       WowneroRestoreWalletFromSeedCredentials credentials,
-      {int nettype = 0}) async {
+      [int nettype = 0]) async {
     try {
       final path =
           await pathForWallet(name: credentials.name!, type: getType());

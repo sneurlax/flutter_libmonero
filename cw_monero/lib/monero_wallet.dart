@@ -131,7 +131,7 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
           login: node.login,
           password: node.password,
           useSSL: node.isSSL,
-          isLightWallet: false); // FIXME: hardcoded value
+          isLightWallet: false); // TODO fix hardcoded value
       syncStatus = ConnectedSyncStatus();
     } catch (e) {
       syncStatus = FailedSyncStatus();
@@ -230,7 +230,7 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
 
   @override
   int calculateEstimatedFee(TransactionPriority priority, int amount) {
-    // FIXME: hardcoded value;
+    // TODO fix hardcoded value;
 
     if (priority is MoneroTransactionPriority) {
       switch (priority) {
