@@ -63,6 +63,8 @@ abstract class OutputBase with Store {
         int _amount = 0;
         switch (walletType) {
           case WalletType.monero:
+          case WalletType.moneroStageNet:
+          case WalletType.moneroTestNet:
             _amount = monero.formatterMoneroParseAmount(amount: _cryptoAmount);
             break;
           case WalletType.wownero:
@@ -91,7 +93,9 @@ abstract class OutputBase with Store {
       final fee = _wallet.calculateEstimatedFee(
           monero.getDefaultTransactionPriority(), formattedCryptoAmount);
 
-      if (_wallet.type == WalletType.monero) {
+      if (_wallet.type == WalletType.monero ||
+          _wallet.type == WalletType.moneroTestNet ||
+          _wallet.type == WalletType.moneroStageNet) {
         return monero.formatterMoneroAmountToDouble(amount: fee);
       }
 
