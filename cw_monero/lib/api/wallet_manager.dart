@@ -192,6 +192,7 @@ void _restoreFromKeys(Map<String, dynamic> args) {
   final address = args['address'] as String;
   final viewKey = args['viewKey'] as String;
   final spendKey = args['spendKey'] as String;
+  final nettype = args['nettype'] as int?;
 
   restoreWalletFromKeysSync(
       path: path,
@@ -200,7 +201,8 @@ void _restoreFromKeys(Map<String, dynamic> args) {
       restoreHeight: restoreHeight,
       address: address,
       viewKey: viewKey,
-      spendKey: spendKey);
+      spendKey: spendKey,
+      nettype: nettype);
 }
 
 Future<void> _openWallet(args) async => loadWallet(
