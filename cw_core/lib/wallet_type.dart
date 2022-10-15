@@ -30,7 +30,13 @@ enum WalletType {
   haven,
 
   @HiveField(5)
-  wownero
+  wownero,
+
+  @HiveField(6)
+  moneroTestNet,
+
+  @HiveField(7)
+  moneroStageNet
 }
 
 int serializeToInt(WalletType? type) {
@@ -45,6 +51,10 @@ int serializeToInt(WalletType? type) {
       return 3;
     case WalletType.wownero:
       return 4;
+    case WalletType.moneroTestNet:
+      return 5;
+    case WalletType.moneroStageNet:
+      return 6;
     default:
       return -1;
   }
@@ -62,6 +72,10 @@ WalletType? deserializeFromInt(int? raw) {
       return WalletType.haven;
     case 4:
       return WalletType.wownero;
+    case 5:
+      return WalletType.moneroTestNet;
+    case 6:
+      return WalletType.moneroStageNet;
     default:
       return null;
   }
@@ -70,6 +84,10 @@ WalletType? deserializeFromInt(int? raw) {
 String walletTypeToString(WalletType type) {
   switch (type) {
     case WalletType.monero:
+      return 'Monero';
+    case WalletType.moneroTestNet:
+      return 'Monero';
+    case WalletType.moneroStageNet:
       return 'Monero';
     case WalletType.bitcoin:
       return 'Bitcoin';
@@ -88,6 +106,10 @@ String walletTypeToDisplayName(WalletType type) {
   switch (type) {
     case WalletType.monero:
       return 'Monero';
+    case WalletType.moneroTestNet:
+      return 'Monero Testnet';
+    case WalletType.moneroStageNet:
+      return 'Monero Stagenet';
     case WalletType.bitcoin:
       return 'Bitcoin (Electrum)';
     case WalletType.litecoin:
@@ -105,6 +127,10 @@ CryptoCurrency? walletTypeToCryptoCurrency(WalletType type) {
   switch (type) {
     case WalletType.monero:
       return CryptoCurrency.xmr;
+    case WalletType.moneroTestNet:
+      return CryptoCurrency.txmr;
+    case WalletType.moneroStageNet:
+      return CryptoCurrency.sxmr;
     case WalletType.bitcoin:
       return CryptoCurrency.btc;
     case WalletType.litecoin:

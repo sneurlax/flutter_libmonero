@@ -28,6 +28,7 @@ class WalletInfoAdapter extends TypeAdapter<WalletInfo> {
       fields[8] as String?,
       fields[11] as String?,
       fields[12] as String?,
+      fields[13] as int?,
     )..addresses = (fields[10] as Map?)?.cast<String, String>();
   }
 

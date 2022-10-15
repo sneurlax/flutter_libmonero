@@ -57,7 +57,7 @@ class WowneroWalletService extends WalletService<
   WowneroWalletService(this.walletInfoSource);
 
   final Box<WalletInfo> walletInfoSource;
-  
+
   static bool walletFilesExist(String path) =>
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
@@ -65,13 +65,18 @@ class WowneroWalletService extends WalletService<
   WalletType getType() => WalletType.wownero;
 
   @override
-  Future<WowneroWallet> create(WowneroNewWalletCredentials credentials) async {
+  Future<WowneroWallet> create(WowneroNewWalletCredentials credentials,
+      [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path = await pathForWallet(
+          name: credentials.name!,
+          type:
+              getType()); // TODO getType(nettype)) when implementing Wownero testnet
       await wownero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
-          language: credentials.language);
+          language: credentials.language,
+          nettype: nettype);
       final wallet = WowneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
@@ -84,9 +89,12 @@ class WowneroWalletService extends WalletService<
   }
 
   @override
-  Future<bool> isWalletExit(String name) async {
+  Future<bool> isWalletExit(String name, [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: name, type: getType());
+      final path = await pathForWallet(
+          name: name,
+          type:
+              getType()); // TODO getType(nettype)) when implementing Wownero testnet
       return wownero_wallet_manager.isWalletExist(path: path);
     } catch (e) {
       // TODO: Implement Exception for wallet list service.
@@ -96,9 +104,13 @@ class WowneroWalletService extends WalletService<
   }
 
   @override
-  Future<WowneroWallet> openWallet(String name, String password) async {
+  Future<WowneroWallet> openWallet(String name, String password,
+      [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: name, type: getType());
+      final path = await pathForWallet(
+          name: name,
+          type:
+              getType()); // TODO getType(nettype)) when implementing Wownero testnet
 
       if (walletFilesExist(path)) {
         await repairOldAndroidWallet(name);
@@ -106,15 +118,18 @@ class WowneroWalletService extends WalletService<
 
       await wownero_wallet_manager
           .openWalletAsync({'path': path, 'password': password});
-      final walletInfo = walletInfoSource.values.firstWhereOrNull(
-          (info) => info.id == WalletBase.idFor(name, getType()))!;
+      final walletInfo = walletInfoSource.values.firstWhereOrNull((info) =>
+          info.id ==
+          WalletBase.idFor(name,
+              getType()))!; // TODO getType(nettype)) when implementing Wownero testnet
       final wallet = WowneroWallet(walletInfo: walletInfo);
       final isValid = wallet.walletAddresses.validate();
 
       if (!isValid) {
         await restoreOrResetWalletFiles(name);
         wallet.close();
-        return openWallet(name, password);
+        return openWallet(name,
+            password); // TODO openWallet(name, password, nettype)) when implementing Wownero testnet
       }
 
       await wallet.init();
@@ -124,14 +139,15 @@ class WowneroWalletService extends WalletService<
       // TODO: Implement Exception for wallet list service.
 
       if ((e.toString().contains('bad_alloc') ||
-          (e is WalletOpeningException &&
-              (e.message == 'std::bad_alloc' ||
-                  e.message!.contains('bad_alloc')))) ||
+              (e is WalletOpeningException &&
+                  (e.message == 'std::bad_alloc' ||
+                      e.message!.contains('bad_alloc')))) ||
           (e.toString().contains('does not correspond') ||
-          (e is WalletOpeningException &&
-            e.message!.contains('does not correspond')))) {
+              (e is WalletOpeningException &&
+                  e.message!.contains('does not correspond')))) {
         await restoreOrResetWalletFiles(name);
-        return openWallet(name, password);
+        return openWallet(name,
+            password); // TODO openWallet(name, password, nettype)) when implementing Wownero testnet
       }
 
       rethrow;
@@ -139,8 +155,11 @@ class WowneroWalletService extends WalletService<
   }
 
   @override
-  Future<void> remove(String wallet) async {
-    final path = await pathForWalletDir(name: wallet, type: getType());
+  Future<void> remove(String wallet, [int nettype = 0]) async {
+    final path = await pathForWalletDir(
+        name: wallet,
+        type:
+            getType()); // TODO getType(nettype)) when implementing Wownero testnet
     final file = Directory(path);
     final isExist = file.existsSync();
 
@@ -151,9 +170,13 @@ class WowneroWalletService extends WalletService<
 
   @override
   Future<WowneroWallet> restoreFromKeys(
-      WowneroRestoreWalletFromKeysCredentials credentials) async {
+      WowneroRestoreWalletFromKeysCredentials credentials,
+      [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path = await pathForWallet(
+          name: credentials.name!,
+          type:
+              getType()); // TODO getType(nettype)) when implementing Wownero testnet
       await wownero_wallet_manager.restoreFromKeys(
           path: path,
           password: credentials.password,
@@ -161,7 +184,8 @@ class WowneroWalletService extends WalletService<
           restoreHeight: credentials.height,
           address: credentials.address,
           viewKey: credentials.viewKey,
-          spendKey: credentials.spendKey);
+          spendKey: credentials.spendKey,
+          nettype: nettype);
       final wallet = WowneroWallet(walletInfo: credentials.walletInfo!);
       wallet.walletInfo.isRecovery = true;
       await wallet.init();
@@ -176,17 +200,24 @@ class WowneroWalletService extends WalletService<
 
   @override
   Future<WowneroWallet> restoreFromSeed(
-      WowneroRestoreWalletFromSeedCredentials credentials) async {
+      WowneroRestoreWalletFromSeedCredentials credentials,
+      [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path = await pathForWallet(
+          name: credentials.name!,
+          type:
+              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+      // TODO check if nettype != credentials.nettype here when implementing Wownero testnet
       await wownero_wallet_manager.restoreFromSeed(
           path: path,
           password: credentials.password,
           seed: credentials.mnemonic,
-          restoreHeight: credentials.height);
+          restoreHeight: credentials.height,
+          nettype: nettype);
       final wallet = WowneroWallet(walletInfo: credentials.walletInfo!);
       wallet.walletInfo.isRecovery = true;
-      wallet.walletInfo.restoreHeight = wallet.getSeedHeight(credentials.mnemonic!);
+      wallet.walletInfo.restoreHeight =
+          wallet.getSeedHeight(credentials.mnemonic!);
       await wallet.init();
 
       return wallet;
@@ -197,7 +228,7 @@ class WowneroWalletService extends WalletService<
     }
   }
 
-  Future<void> repairOldAndroidWallet(String name) async {
+  Future<void> repairOldAndroidWallet(String name, [int nettype = 0]) async {
     try {
       if (!Platform.isAndroid) {
         return;
@@ -211,8 +242,10 @@ class WowneroWalletService extends WalletService<
         return;
       }
 
-      final newWalletDirPath =
-          await pathForWalletDir(name: name, type: getType());
+      final newWalletDirPath = await pathForWalletDir(
+          name: name,
+          type:
+              getType()); // TODO getType(nettype)) when implementing Wownero testnet
 
       dir.listSync().forEach((f) {
         final file = File(f.path);

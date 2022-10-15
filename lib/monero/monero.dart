@@ -115,7 +115,11 @@ abstract class Monero {
       String? language,
       int? height});
   WalletCredentials createMoneroRestoreWalletFromSeedCredentials(
-      {String? name, String? password, int? height, String? mnemonic});
+      {String? name,
+      String? password,
+      int? height,
+      String? mnemonic,
+      int? nettype});
   WalletCredentials createMoneroNewWalletCredentials(
       {String? name, String? password, String? language});
   Map<String, String?> getKeys(Object wallet);
@@ -147,5 +151,6 @@ abstract class MoneroAccountList {
   void refresh(Object wallet);
   List<Account> getAll(Object wallet);
   Future<void> addAccount(Object wallet, {String? label});
-  Future<void> setLabelAccount(Object wallet, {int? accountIndex, String? label});
+  Future<void> setLabelAccount(Object wallet,
+      {int? accountIndex, String? label});
 }

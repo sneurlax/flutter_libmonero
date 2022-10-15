@@ -24,6 +24,8 @@ class MoneroTransactionPriority extends TransactionPriority {
   static List<MoneroTransactionPriority> forWalletType(WalletType type) {
     switch (type) {
       case WalletType.monero:
+      case WalletType.moneroTestNet:
+      case WalletType.moneroStageNet:
         return MoneroTransactionPriority.all;
       case WalletType.bitcoin:
         return [

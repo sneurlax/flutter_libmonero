@@ -217,9 +217,17 @@ class CWMonero extends Monero {
   }
 
   WalletCredentials createMoneroRestoreWalletFromSeedCredentials(
-      {String? name, String? password, int? height, String? mnemonic}) {
+      {String? name,
+      String? password,
+      int? height,
+      String? mnemonic,
+      int? nettype}) {
     return MoneroRestoreWalletFromSeedCredentials(
-        name: name, password: password, height: height, mnemonic: mnemonic);
+        name: name,
+        password: password,
+        height: height,
+        mnemonic: mnemonic,
+        nettype: nettype ?? 0);
   }
 
   WalletCredentials createMoneroNewWalletCredentials(

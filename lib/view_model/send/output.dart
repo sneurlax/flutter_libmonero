@@ -63,6 +63,8 @@ abstract class OutputBase with Store {
         int _amount = 0;
         switch (walletType) {
           case WalletType.monero:
+          case WalletType.moneroTestNet:
+          case WalletType.moneroStageNet:
             _amount = monero.formatterMoneroParseAmount(amount: _cryptoAmount);
             break;
           case WalletType.wownero:
@@ -91,7 +93,9 @@ abstract class OutputBase with Store {
       final fee = _wallet.calculateEstimatedFee(
           monero.getDefaultTransactionPriority(), formattedCryptoAmount);
 
-      if (_wallet.type == WalletType.monero) {
+      if (_wallet.type == WalletType.monero ||
+          _wallet.type == WalletType.moneroTestNet ||
+          _wallet.type == WalletType.moneroStageNet) {
         return monero.formatterMoneroAmountToDouble(amount: fee);
       }
 
@@ -192,6 +196,9 @@ abstract class OutputBase with Store {
 
     switch (_wallet.type) {
       case WalletType.monero:
+      case WalletType.moneroStageNet:
+      case WalletType.moneroTestNet:
+      case WalletType.wownero:
         maximumFractionDigits = 12;
         break;
       case WalletType.bitcoin:
@@ -201,9 +208,6 @@ abstract class OutputBase with Store {
         maximumFractionDigits = 8;
         break;
       case WalletType.haven:
-        maximumFractionDigits = 12;
-        break;
-      case WalletType.wownero:
         maximumFractionDigits = 12;
         break;
       default:

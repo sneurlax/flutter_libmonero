@@ -10,6 +10,8 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
 
   static const all = [
     CryptoCurrency.xmr,
+    CryptoCurrency.txmr,
+    CryptoCurrency.sxmr,
     CryptoCurrency.ada,
     CryptoCurrency.bch,
     CryptoCurrency.bnb,
@@ -28,6 +30,8 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
     CryptoCurrency.wow
   ];
   static const xmr = CryptoCurrency(title: 'XMR', raw: 0);
+  static const sxmr = CryptoCurrency(title: 'sXMR', raw: 0);
+  static const txmr = CryptoCurrency(title: 'tXMR', raw: 0);
   static const ada = CryptoCurrency(title: 'ADA', raw: 1);
   static const bch = CryptoCurrency(title: 'BCH', raw: 2);
   static const bnb = CryptoCurrency(title: 'BNB BEP2', raw: 3);
@@ -64,6 +68,10 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
     switch (raw) {
       case 0:
         return CryptoCurrency.xmr;
+      case 31:
+        return CryptoCurrency.txmr;
+      case 32:
+        return CryptoCurrency.sxmr;
       case 1:
         return CryptoCurrency.ada;
       case 2:
@@ -133,6 +141,10 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
     switch (raw.toLowerCase()) {
       case 'xmr':
         return CryptoCurrency.xmr;
+      case 'txmr':
+        return CryptoCurrency.txmr;
+      case 'sxmr':
+        return CryptoCurrency.sxmr;
       case 'ada':
         return CryptoCurrency.ada;
       case 'bch':

@@ -22,37 +22,68 @@ class WalletCreationService {
   }
 
   WalletType type = WalletType.monero;
-  final dynamic secureStorage;
+  final dynamic? secureStorage;
   final SharedPreferences? sharedPreferences;
   final KeyService? keyService;
   WalletService? _service;
 
-  void changeWalletType() {
+  void changeWalletType([int nettype = 0]) {
     this.type = WalletType.monero;
+    if (nettype == 0) {
+      this.type = WalletType.monero;
+    } else if (nettype == 1) {
+      this.type = WalletType.moneroTestNet;
+    } else if (nettype == 2) {
+      this.type = WalletType.moneroStageNet;
+    }
     _service = walletService;
   }
 
-  Future<WalletBase> create(WalletCredentials credentials) async {
+  Future<WalletBase> create(WalletCredentials credentials,
+      [int? nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
+    if (nettype != credentials.nettype && credentials.nettype != null) {
+      nettype = credentials.nettype;
+    }
+    if (nettype != credentials.walletInfo?.nettype &&
+        credentials.walletInfo?.nettype != null) {
+      nettype = credentials.walletInfo?.nettype;
+    }
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.create(credentials);
+    return await _service!.create(credentials, nettype ?? 0);
   }
 
-  Future<WalletBase> restoreFromKeys(WalletCredentials credentials) async {
+  Future<WalletBase> restoreFromKeys(WalletCredentials credentials,
+      [int? nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
+    if (nettype != credentials.nettype && credentials.nettype != null) {
+      nettype = credentials.nettype;
+    }
+    if (nettype != credentials.walletInfo?.nettype &&
+        credentials.walletInfo?.nettype != null) {
+      nettype = credentials.walletInfo?.nettype;
+    }
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.restoreFromKeys(credentials);
+    return await _service!.restoreFromKeys(credentials, nettype ?? 0);
   }
 
-  Future<WalletBase> restoreFromSeed(WalletCredentials credentials) async {
+  Future<WalletBase> restoreFromSeed(WalletCredentials credentials,
+      [int? nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
+    if (nettype != credentials.nettype && credentials.nettype != null) {
+      nettype = credentials.nettype;
+    }
+    if (nettype != credentials.walletInfo?.nettype &&
+        credentials.walletInfo?.nettype != null) {
+      nettype = credentials.walletInfo?.nettype;
+    }
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.restoreFromSeed(credentials);
+    return await _service!.restoreFromSeed(credentials, nettype ?? 0);
   }
 }

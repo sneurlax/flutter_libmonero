@@ -25,6 +25,8 @@ class AmountConverter {
   static double? amountIntToDouble(CryptoCurrency cryptoCurrency, int amount) {
     switch (cryptoCurrency) {
       case CryptoCurrency.xmr:
+      case CryptoCurrency.txmr:
+      case CryptoCurrency.sxmr:
         return _moneroAmountToDouble(amount);
       case CryptoCurrency.btc:
         return _bitcoinAmountToDouble(amount);
@@ -61,6 +63,8 @@ class AmountConverter {
   static int? amountStringToInt(CryptoCurrency cryptoCurrency, String amount) {
     switch (cryptoCurrency) {
       case CryptoCurrency.xmr:
+      case CryptoCurrency.txmr:
+      case CryptoCurrency.sxmr:
         return _moneroParseAmount(amount);
       case CryptoCurrency.wow:
         return _wowneroParseAmount(amount);
@@ -87,6 +91,8 @@ class AmountConverter {
   static String? amountIntToString(CryptoCurrency cryptoCurrency, int amount) {
     switch (cryptoCurrency) {
       case CryptoCurrency.xmr:
+      case CryptoCurrency.txmr:
+      case CryptoCurrency.sxmr:
         return _moneroAmountToString(amount);
       case CryptoCurrency.btc:
         return _bitcoinAmountToString(amount);
@@ -112,7 +118,8 @@ class AmountConverter {
     }
   }
 
-  static double cryptoAmountToDouble({required num amount, required num divider}) =>
+  static double cryptoAmountToDouble(
+          {required num amount, required num divider}) =>
       amount / divider;
 
   static String _moneroAmountToString(int amount) => _moneroAmountFormat.format(
@@ -124,8 +131,9 @@ class AmountConverter {
   static int _moneroParseAmount(String amount) =>
       _moneroAmountFormat.parse(amount).toInt();
 
-  static String _wowneroAmountToString(int amount) => _wowneroAmountFormat.format(
-      cryptoAmountToDouble(amount: amount, divider: _wowneroAmountDivider));
+  static String _wowneroAmountToString(int amount) =>
+      _wowneroAmountFormat.format(
+          cryptoAmountToDouble(amount: amount, divider: _wowneroAmountDivider));
 
   static double _wowneroAmountToDouble(int amount) =>
       cryptoAmountToDouble(amount: amount, divider: _wowneroAmountDivider);

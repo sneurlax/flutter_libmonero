@@ -7,6 +7,10 @@ CryptoCurrency? currencyForWalletType(WalletType? type) {
       return CryptoCurrency.btc;
     case WalletType.monero:
       return CryptoCurrency.xmr;
+    case WalletType.moneroTestNet:
+      return CryptoCurrency.txmr;
+    case WalletType.moneroStageNet:
+      return CryptoCurrency.sxmr;
     case WalletType.litecoin:
       return CryptoCurrency.ltc;
     case WalletType.haven:
