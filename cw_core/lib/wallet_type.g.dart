@@ -25,6 +25,10 @@ class WalletTypeAdapter extends TypeAdapter<WalletType> {
         return WalletType.haven;
       case 5:
         return WalletType.wownero;
+      case 6:
+        return WalletType.moneroTestNet;
+      case 7:
+        return WalletType.moneroStageNet;
       default:
         return WalletType.monero;
     }
@@ -50,6 +54,12 @@ class WalletTypeAdapter extends TypeAdapter<WalletType> {
         break;
       case WalletType.wownero:
         writer.writeByte(5);
+        break;
+      case WalletType.moneroTestNet:
+        writer.writeByte(6);
+        break;
+      case WalletType.moneroStageNet:
+        writer.writeByte(7);
         break;
     }
   }

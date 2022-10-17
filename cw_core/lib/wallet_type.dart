@@ -5,6 +5,8 @@ part 'wallet_type.g.dart';
 
 const walletTypes = [
   WalletType.monero,
+  WalletType.moneroTestNet,
+  WalletType.moneroStageNet,
   WalletType.bitcoin,
   WalletType.litecoin,
   WalletType.haven,
