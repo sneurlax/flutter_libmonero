@@ -102,12 +102,20 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
     _setListeners();
     await updateTransactions();
 
-    if (walletInfo.isRecovery!) {
-      monero_wallet.setRecoveringFromSeed(isRecovery: walletInfo.isRecovery!);
+    if (walletInfo == null) {
+      throw Exception("Tried to call init() in monero without walletInfo!");
+      // TODO throw exception or handle case?  Might alarm users if their balance "disappears"
+    } else {
+      if (walletInfo.isRecovery != null) {
+        if (walletInfo.isRecovery!) {
+          monero_wallet.setRecoveringFromSeed(
+              isRecovery: walletInfo.isRecovery!);
 
-      if (monero_wallet.getCurrentHeight() <= 1) {
-        monero_wallet.setRefreshFromBlockHeight(
-            height: walletInfo.restoreHeight);
+          if (monero_wallet.getCurrentHeight() <= 1) {
+            monero_wallet.setRefreshFromBlockHeight(
+                height: walletInfo.restoreHeight);
+          }
+        }
       }
     }
 
