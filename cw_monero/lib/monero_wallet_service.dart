@@ -85,11 +85,11 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> create(MoneroNewWalletCredentials credentials,
       [int nettype = 0]) async {
     if (nettype != credentials.nettype && credentials.nettype != null) {
-      nettype = credentials.nettype;
+      nettype = credentials.nettype ?? 0;
     }
     if (nettype != credentials.walletInfo?.nettype &&
         credentials.walletInfo?.nettype != null) {
-      nettype = credentials.walletInfo?.nettype;
+      nettype = credentials.walletInfo?.nettype ?? 0;
     }
     if (credentials.walletInfo?.type == WalletType.moneroTestNet) {
       nettype = 1;
@@ -117,25 +117,10 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<bool> isWalletExit(String name, // TODO type?
-      [int nettype = 0]) async {
-    if (nettype != credentials.nettype && credentials.nettype != null) {
-      nettype = credentials.nettype;
-    }
-    if (nettype != credentials.walletInfo?.nettype &&
-        credentials.walletInfo?.nettype != null) {
-      nettype = credentials.walletInfo?.nettype;
-    }
-    if (credentials.walletInfo?.type == WalletType.moneroTestNet) {
-      nettype = 1;
-    } else if (credentials.walletInfo?.type == WalletType.moneroStageNet) {
-      nettype = 2;
-    }
-
+  Future<bool> isWalletExist(String name, [int nettype = 0]) async {
     try {
       final path = await pathForWallet(name: name, type: getType(nettype));
-      return monero_wallet_manager.isWalletExist(
-          path: path); // TODO check does this need nettype?
+      return monero_wallet_manager.isWalletExist(path: path);
     } catch (e) {
       // TODO: Implement Exception for wallet list service.
       print('MoneroWalletsManager Error: $e');

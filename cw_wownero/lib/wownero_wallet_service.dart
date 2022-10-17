@@ -89,7 +89,7 @@ class WowneroWalletService extends WalletService<
   }
 
   @override
-  Future<bool> isWalletExit(String name, [int nettype = 0]) async {
+  Future<bool> isWalletExist(String name, [int nettype = 0]) async {
     try {
       final path = await pathForWallet(
           name: name,
