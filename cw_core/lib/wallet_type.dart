@@ -88,9 +88,9 @@ String walletTypeToString(WalletType type) {
     case WalletType.monero:
       return 'Monero';
     case WalletType.moneroTestNet:
-      return 'Monero';
+      return 'Monero Testnet';
     case WalletType.moneroStageNet:
-      return 'Monero';
+      return 'Monero Stagenet';
     case WalletType.bitcoin:
       return 'Bitcoin';
     case WalletType.litecoin:
