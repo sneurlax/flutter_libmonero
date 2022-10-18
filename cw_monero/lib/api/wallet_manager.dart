@@ -42,7 +42,7 @@ void createWalletSync(
     {required String path,
     required String password,
     required String language,
-    int nettype = 0}) {
+    required int nettype}) {
   final pathPointer = path.toNativeUtf8();
   final passwordPointer = password.toNativeUtf8();
   final languagePointer = language.toNativeUtf8();
@@ -77,8 +77,8 @@ void restoreWalletFromSeedSync(
     {required String path,
     required String password,
     required String seed,
-    int? nettype = 0,
-    int? restoreHeight = 0}) {
+    required nettype,
+    int? restoreHeight}) {
   final pathPointer = path.toNativeUtf8();
   final passwordPointer = password.toNativeUtf8();
   final seedPointer = seed.toNativeUtf8();
@@ -88,7 +88,7 @@ void restoreWalletFromSeedSync(
           pathPointer,
           passwordPointer,
           seedPointer,
-          nettype ?? 0,
+          nettype,
           restoreHeight ?? 0,
           errorMessagePointer) !=
       0;
@@ -110,8 +110,8 @@ void restoreWalletFromKeysSync(
     required String address,
     required String viewKey,
     required String spendKey,
-    int? nettype = 0,
-    int? restoreHeight = 0}) {
+    required nettype,
+    int? restoreHeight}) {
   final pathPointer = path.toNativeUtf8();
   final passwordPointer = password.toNativeUtf8();
   final languagePointer = language.toNativeUtf8();
@@ -127,7 +127,7 @@ void restoreWalletFromKeysSync(
           addressPointer,
           viewKeyPointer,
           spendKeyPointer,
-          nettype ?? 0,
+          nettype,
           restoreHeight ?? 0,
           errorMessagePointer) !=
       0;
@@ -146,11 +146,10 @@ void restoreWalletFromKeysSync(
 }
 
 void loadWallet(
-    {required String path, required String password, int? nettype = 0}) {
+    {required String path, required String password, required int nettype}) {
   final pathPointer = path.toNativeUtf8();
   final passwordPointer = password.toNativeUtf8();
-  final loaded =
-      loadWalletNative(pathPointer, passwordPointer, nettype ?? 0) != 0;
+  final loaded = loadWalletNative(pathPointer, passwordPointer, nettype) != 0;
   pkgffi.calloc.free(pathPointer);
   pkgffi.calloc.free(passwordPointer);
 
@@ -164,13 +163,10 @@ void _createWallet(Map<String, dynamic> args) {
   final path = args['path'] as String;
   final password = args['password'] as String;
   final language = args['language'] as String;
-  final nettype = args['nettype'] as int?;
+  final nettype = args['nettype'] as int;
 
   createWalletSync(
-      path: path,
-      password: password,
-      language: language,
-      nettype: nettype ?? 0);
+      path: path, password: password, nettype: nettype, language: language);
 }
 
 void _restoreFromSeed(Map<String, dynamic> args) {
@@ -178,14 +174,14 @@ void _restoreFromSeed(Map<String, dynamic> args) {
   final password = args['password'] as String;
   final seed = args['seed'] as String;
   final restoreHeight = args['restoreHeight'] as int?;
-  final nettype = args['nettype'] as int?;
+  final nettype = args['nettype'] as int;
 
   restoreWalletFromSeedSync(
       path: path,
       password: password,
       seed: seed,
-      restoreHeight: restoreHeight ?? 0,
-      nettype: nettype ?? 0);
+      nettype: nettype,
+      restoreHeight: restoreHeight ?? 0);
 }
 
 void _restoreFromKeys(Map<String, dynamic> args) {
@@ -212,15 +208,15 @@ void _restoreFromKeys(Map<String, dynamic> args) {
 Future<void> _openWallet(args) async => loadWallet(
     path: args['path']!,
     password: args['password']!,
-    nettype: args['nettype'] ?? 0);
+    nettype: args['nettype']!);
 
 bool _isWalletExist(String? path) => isWalletExistSync(path: path!);
 
 void openWallet(
         {required String path,
         required String password,
-        int? nettype = 0}) async =>
-    loadWallet(path: path, password: password, nettype: nettype ?? 0);
+        required int nettype}) async =>
+    loadWallet(path: path, password: password, nettype: nettype);
 
 Future<void> openWalletAsync(args) async => compute(_openWallet, args);
 
@@ -228,7 +224,7 @@ Future<void> createWallet(
         {String? path,
         String? password,
         String? language,
-        int nettype = 0}) async =>
+        int? nettype}) async =>
     compute(_createWallet, {
       'path': path,
       'password': password,
@@ -240,13 +236,13 @@ Future restoreFromSeed(
         {String? path,
         String? password,
         String? seed,
-        int? nettype = 0,
+        int? nettype,
         int? restoreHeight = 0}) async =>
     compute<Map<String, Object?>, void>(_restoreFromSeed, {
       'path': path,
       'password': password,
       'seed': seed,
-      'nettype': nettype ?? 0,
+      'nettype': nettype,
       'restoreHeight': restoreHeight ?? 0
     });
 
@@ -257,7 +253,7 @@ Future restoreFromKeys(
         String? address,
         String? viewKey,
         String? spendKey,
-        int nettype = 0,
+        int? nettype,
         int? restoreHeight = 0}) async =>
     compute<Map<String, Object?>, void>(_restoreFromKeys, {
       'path': path,

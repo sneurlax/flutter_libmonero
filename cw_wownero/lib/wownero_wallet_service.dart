@@ -62,7 +62,7 @@ class WowneroWalletService extends WalletService<
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
   @override
-  WalletType getType() => WalletType.wownero;
+  WalletType getType(nettype) => WalletType.wownero;
 
   @override
   Future<WowneroWallet> create(WowneroNewWalletCredentials credentials,
@@ -70,8 +70,8 @@ class WowneroWalletService extends WalletService<
     try {
       final path = await pathForWallet(
           name: credentials.name!,
-          type:
-              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+          type: getType(
+              nettype)); // TODO getType(nettype)) when implementing Wownero testnet
       await wownero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
@@ -93,8 +93,8 @@ class WowneroWalletService extends WalletService<
     try {
       final path = await pathForWallet(
           name: name,
-          type:
-              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+          type: getType(
+              nettype)); // TODO getType(nettype)) when implementing Wownero testnet
       return wownero_wallet_manager.isWalletExist(path: path);
     } catch (e) {
       // TODO: Implement Exception for wallet list service.
@@ -109,8 +109,8 @@ class WowneroWalletService extends WalletService<
     try {
       final path = await pathForWallet(
           name: name,
-          type:
-              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+          type: getType(
+              nettype)); // TODO getType(nettype)) when implementing Wownero testnet
 
       if (walletFilesExist(path)) {
         await repairOldAndroidWallet(name);
@@ -120,8 +120,10 @@ class WowneroWalletService extends WalletService<
           .openWalletAsync({'path': path, 'password': password});
       final walletInfo = walletInfoSource.values.firstWhereOrNull((info) =>
           info.id ==
-          WalletBase.idFor(name,
-              getType()))!; // TODO getType(nettype)) when implementing Wownero testnet
+          WalletBase.idFor(
+              name,
+              getType(
+                  nettype)))!; // TODO getType(nettype)) when implementing Wownero testnet
       final wallet = WowneroWallet(walletInfo: walletInfo);
       final isValid = wallet.walletAddresses.validate();
 
@@ -158,8 +160,8 @@ class WowneroWalletService extends WalletService<
   Future<void> remove(String wallet, [int nettype = 0]) async {
     final path = await pathForWalletDir(
         name: wallet,
-        type:
-            getType()); // TODO getType(nettype)) when implementing Wownero testnet
+        type: getType(
+            nettype)); // TODO getType(nettype)) when implementing Wownero testnet
     final file = Directory(path);
     final isExist = file.existsSync();
 
@@ -175,8 +177,8 @@ class WowneroWalletService extends WalletService<
     try {
       final path = await pathForWallet(
           name: credentials.name!,
-          type:
-              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+          type: getType(
+              nettype)); // TODO getType(nettype)) when implementing Wownero testnet
       await wownero_wallet_manager.restoreFromKeys(
           path: path,
           password: credentials.password,
@@ -205,8 +207,8 @@ class WowneroWalletService extends WalletService<
     try {
       final path = await pathForWallet(
           name: credentials.name!,
-          type:
-              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+          type: getType(
+              nettype)); // TODO getType(nettype)) when implementing Wownero testnet
       // TODO check if nettype != credentials.nettype here when implementing Wownero testnet
       await wownero_wallet_manager.restoreFromSeed(
           path: path,
@@ -244,8 +246,8 @@ class WowneroWalletService extends WalletService<
 
       final newWalletDirPath = await pathForWalletDir(
           name: name,
-          type:
-              getType()); // TODO getType(nettype)) when implementing Wownero testnet
+          type: getType(
+              nettype)); // TODO getType(nettype)) when implementing Wownero testnet
 
       dir.listSync().forEach((f) {
         final file = File(f.path);

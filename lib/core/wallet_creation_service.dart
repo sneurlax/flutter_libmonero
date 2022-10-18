@@ -28,62 +28,42 @@ class WalletCreationService {
   WalletService? _service;
 
   void changeWalletType([int nettype = 0]) {
-    this.type = WalletType.monero;
     if (nettype == 0) {
       this.type = WalletType.monero;
     } else if (nettype == 1) {
       this.type = WalletType.moneroTestNet;
-    } else if (nettype == 2) {
+    } else {
       this.type = WalletType.moneroStageNet;
     }
     _service = walletService;
   }
 
   Future<WalletBase> create(WalletCredentials credentials,
-      [int? nettype = 0]) async {
+      [int nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
-    if (nettype != credentials.nettype && credentials.nettype != null) {
-      nettype = credentials.nettype;
-    }
-    if (nettype != credentials.walletInfo?.nettype &&
-        credentials.walletInfo?.nettype != null) {
-      nettype = credentials.walletInfo?.nettype;
-    }
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.create(credentials, nettype ?? 0);
+    return await _service!.create(credentials, nettype);
   }
 
   Future<WalletBase> restoreFromKeys(WalletCredentials credentials,
-      [int? nettype = 0]) async {
+      [int nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
-    if (nettype != credentials.nettype && credentials.nettype != null) {
-      nettype = credentials.nettype;
-    }
-    if (nettype != credentials.walletInfo?.nettype &&
-        credentials.walletInfo?.nettype != null) {
-      nettype = credentials.walletInfo?.nettype;
-    }
+
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.restoreFromKeys(credentials, nettype ?? 0);
+    return await _service!.restoreFromKeys(credentials, nettype);
   }
 
   Future<WalletBase> restoreFromSeed(WalletCredentials credentials,
-      [int? nettype = 0]) async {
+      [int nettype = 0]) async {
     final password = generatePassword();
     credentials.password = password;
-    if (nettype != credentials.nettype && credentials.nettype != null) {
-      nettype = credentials.nettype;
-    }
-    if (nettype != credentials.walletInfo?.nettype &&
-        credentials.walletInfo?.nettype != null) {
-      nettype = credentials.walletInfo?.nettype;
-    }
+
     await keyService!
         .saveWalletPassword(password: password, walletName: credentials.name);
-    return await _service!.restoreFromSeed(credentials, nettype ?? 0);
+    return await _service!.restoreFromSeed(credentials, nettype);
   }
 }

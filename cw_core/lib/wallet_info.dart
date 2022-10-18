@@ -18,8 +18,7 @@ class WalletInfo extends HiveObject {
       this.path,
       this.address,
       this.yatEid,
-      this.yatLastUsedAddressRaw,
-      this.nettype)
+      this.yatLastUsedAddressRaw)
       : _yatLastUsedAddressController = StreamController<String?>.broadcast();
 
   factory WalletInfo.external(
@@ -33,8 +32,7 @@ class WalletInfo extends HiveObject {
       required String path,
       required String address,
       String yatEid = '',
-      String yatLastUsedAddressRaw = '',
-      int? nettype = 0}) {
+      String yatLastUsedAddressRaw = ''}) {
     return WalletInfo(
         id,
         name,
@@ -46,8 +44,7 @@ class WalletInfo extends HiveObject {
         path,
         address,
         yatEid,
-        yatLastUsedAddressRaw,
-        nettype ?? 0);
+        yatLastUsedAddressRaw);
   }
 
   static const typeId = 4;
@@ -88,9 +85,6 @@ class WalletInfo extends HiveObject {
 
   @HiveField(12)
   String? yatLastUsedAddressRaw;
-
-  @HiveField(13)
-  int? nettype;
 
   String? get yatLastUsedAddress => yatLastUsedAddressRaw;
 
