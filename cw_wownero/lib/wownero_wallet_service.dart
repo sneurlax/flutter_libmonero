@@ -62,7 +62,8 @@ class WowneroWalletService extends WalletService<
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
   @override
-  WalletType getType(nettype) => WalletType.wownero;
+  WalletType getType() => WalletType
+      .wownero; // TODO fix when actually implementing wownero stagenet/testnet
 
   @override
   Future<WowneroWallet> create(WowneroNewWalletCredentials credentials,

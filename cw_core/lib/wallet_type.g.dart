@@ -55,10 +55,10 @@ class WalletTypeAdapter extends TypeAdapter<WalletType> {
       case WalletType.wownero:
         writer.writeByte(5);
         break;
-      case WalletType.moneroTestNet:
+      case WalletType.wowneroTestNet:
         writer.writeByte(6);
         break;
-      case WalletType.moneroStageNet:
+      case WalletType.wowneroStageNet:
         writer.writeByte(7);
         break;
     }

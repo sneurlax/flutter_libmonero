@@ -68,6 +68,8 @@ abstract class OutputBase with Store {
             _amount = monero.formatterMoneroParseAmount(amount: _cryptoAmount);
             break;
           case WalletType.wownero:
+          case WalletType.wowneroTestNet:
+          case WalletType.wowneroStageNet:
             _amount =
                 wownero.formatterWowneroParseAmount(amount: _cryptoAmount);
             break;
@@ -99,7 +101,9 @@ abstract class OutputBase with Store {
         return monero.formatterMoneroAmountToDouble(amount: fee);
       }
 
-      if (_wallet.type == WalletType.wownero) {
+      if (_wallet.type == WalletType.wownero ||
+          _wallet.type == WalletType.wowneroTestNet ||
+          _wallet.type == WalletType.wowneroStageNet) {
         return wownero.formatterWowneroAmountToDouble(amount: fee);
       }
     } catch (e) {
@@ -199,6 +203,8 @@ abstract class OutputBase with Store {
       case WalletType.moneroStageNet:
       case WalletType.moneroTestNet:
       case WalletType.wownero:
+      case WalletType.wowneroStageNet:
+      case WalletType.wowneroTestNet:
         maximumFractionDigits = 12;
         break;
       case WalletType.bitcoin:

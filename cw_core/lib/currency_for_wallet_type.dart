@@ -17,6 +17,10 @@ CryptoCurrency? currencyForWalletType(WalletType? type) {
       return CryptoCurrency.xhv;
     case WalletType.wownero:
       return CryptoCurrency.wow;
+    case WalletType.wowneroTestNet:
+      return CryptoCurrency.twow;
+    case WalletType.wowneroStageNet:
+      return CryptoCurrency.swow;
     default:
       return null;
   }
