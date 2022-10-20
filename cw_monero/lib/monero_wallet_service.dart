@@ -16,7 +16,7 @@ import 'package:cw_core/wallet_type.dart';
 class MoneroNewWalletCredentials extends WalletCredentials {
   MoneroNewWalletCredentials(
       {String? name, String? password, this.language, int? nettype})
-      : super(name: name, password: password);
+      : super(name: name, password: password, nettype: nettype);
 
   final String? language;
 }
