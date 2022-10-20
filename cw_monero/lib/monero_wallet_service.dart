@@ -71,25 +71,10 @@ class MoneroWalletService extends WalletService<
   WalletType getType() => WalletType.monero;
 
   @override
-  int getNettype() => 0;
-
-  @override
-  WalletType getWalletType(int nettype) {
-    if (nettype == 0) {
-      return WalletType.monero;
-    } else if (nettype == 1) {
-      return WalletType.moneroTestNet;
-    } else {
-      return WalletType.moneroStageNet;
-    }
-  }
-
-  @override
   Future<MoneroWallet> create(MoneroNewWalletCredentials credentials) async {
     try {
-      final path = await pathForWallet(
-          name: credentials.name!,
-          type: getWalletType(credentials.nettype ?? 0));
+      final path =
+          await pathForWallet(name: credentials.name!, type: WalletType.monero);
       await monero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
@@ -107,10 +92,9 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<bool> isWalletExit(String name, [int nettype = 0]) async {
+  Future<bool> isWalletExit(String name) async {
     try {
-      final path =
-          await pathForWallet(name: name, type: getWalletType(nettype));
+      final path = await pathForWallet(name: name, type: WalletType.monero);
       return monero_wallet_manager.isWalletExist(path: path);
     } catch (e) {
       // TODO: Implement Exception for wallet list service.
@@ -123,11 +107,10 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> openWallet(String name, String password,
       [int nettype = 0]) async {
     try {
-      final path =
-          await pathForWallet(name: name, type: getWalletType(nettype));
+      final path = await pathForWallet(name: name, type: WalletType.monero);
 
       if (walletFilesExist(path)) {
-        await repairOldAndroidWallet(name, nettype);
+        await repairOldAndroidWallet(name);
       }
 
       await monero_wallet_manager.openWalletAsync(
@@ -165,9 +148,8 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<void> remove(String wallet, [int nettype = 0]) async {
-    final path =
-        await pathForWalletDir(name: wallet, type: getWalletType(nettype));
+  Future<void> remove(String wallet) async {
+    final path = await pathForWalletDir(name: wallet, type: WalletType.monero);
     final file = Directory(path);
     final isExist = file.existsSync();
 
@@ -180,9 +162,8 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> restoreFromKeys(
       MoneroRestoreWalletFromKeysCredentials credentials) async {
     try {
-      final path = await pathForWallet(
-          name: credentials.name!,
-          type: getWalletType(credentials.nettype ?? 0));
+      final path =
+          await pathForWallet(name: credentials.name!, type: WalletType.monero);
       await monero_wallet_manager.restoreFromKeys(
           path: path,
           password: credentials.password,
@@ -207,9 +188,8 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> restoreFromSeed(
       MoneroRestoreWalletFromSeedCredentials credentials) async {
     try {
-      final path = await pathForWallet(
-          name: credentials.name!,
-          type: getWalletType(credentials.nettype ?? 0));
+      final path =
+          await pathForWallet(name: credentials.name!, type: WalletType.monero);
       await monero_wallet_manager.restoreFromSeed(
           path: path,
           password: credentials.password,
@@ -227,7 +207,7 @@ class MoneroWalletService extends WalletService<
     }
   }
 
-  Future<void> repairOldAndroidWallet(String name, int nettype) async {
+  Future<void> repairOldAndroidWallet(String name) async {
     try {
       if (!Platform.isAndroid) {
         return;
@@ -242,7 +222,7 @@ class MoneroWalletService extends WalletService<
       }
 
       final newWalletDirPath =
-          await pathForWalletDir(name: name, type: getWalletType(nettype));
+          await pathForWalletDir(name: name, type: WalletType.monero);
 
       dir.listSync().forEach((f) {
         final file = File(f.path);

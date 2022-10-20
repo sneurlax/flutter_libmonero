@@ -8,9 +8,7 @@ const walletTypes = [
   WalletType.bitcoin,
   WalletType.litecoin,
   WalletType.haven,
-  WalletType.wownero,
-  WalletType.moneroTestNet,
-  WalletType.moneroStageNet
+  WalletType.wownero
 ];
 const walletTypeTypeId = 5;
 
@@ -32,13 +30,7 @@ enum WalletType {
   haven,
 
   @HiveField(5)
-  wownero,
-
-  @HiveField(6)
-  moneroTestNet,
-
-  @HiveField(7)
-  moneroStageNet
+  wownero
 }
 
 int serializeToInt(WalletType? type) {
@@ -53,10 +45,6 @@ int serializeToInt(WalletType? type) {
       return 3;
     case WalletType.wownero:
       return 4;
-    case WalletType.moneroTestNet:
-      return 5;
-    case WalletType.moneroStageNet:
-      return 6;
     default:
       return -1;
   }
@@ -74,10 +62,6 @@ WalletType? deserializeFromInt(int? raw) {
       return WalletType.haven;
     case 4:
       return WalletType.wownero;
-    case 5:
-      return WalletType.moneroTestNet;
-    case 6:
-      return WalletType.moneroStageNet;
     default:
       return null;
   }
@@ -95,10 +79,6 @@ String walletTypeToString(WalletType type) {
       return 'Haven';
     case WalletType.wownero:
       return 'Wownero';
-    case WalletType.moneroTestNet:
-      return 'tMonero';
-    case WalletType.moneroStageNet:
-      return 'sMonero';
     default:
       return '';
   }
@@ -116,10 +96,6 @@ String walletTypeToDisplayName(WalletType type) {
       return 'Haven';
     case WalletType.wownero:
       return 'Wownero';
-    case WalletType.moneroTestNet:
-      return 'tMonero';
-    case WalletType.moneroStageNet:
-      return 'sMonero';
     default:
       return '';
   }
@@ -137,10 +113,6 @@ CryptoCurrency? walletTypeToCryptoCurrency(WalletType type) {
       return CryptoCurrency.xhv;
     case WalletType.wownero:
       return CryptoCurrency.wow;
-    case WalletType.moneroTestNet:
-      return CryptoCurrency.txmr;
-    case WalletType.moneroStageNet:
-      return CryptoCurrency.sxmr;
     default:
       return null;
   }
