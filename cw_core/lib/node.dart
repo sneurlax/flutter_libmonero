@@ -54,14 +54,13 @@ class Node extends HiveObject with Keyable {
   Uri? get uri {
     switch (type) {
       case WalletType.monero:
+      case WalletType.wownero:
         return Uri.http(uriRaw!, '');
       case WalletType.bitcoin:
         return createUriFromElectrumAddress(uriRaw);
       case WalletType.litecoin:
         return createUriFromElectrumAddress(uriRaw);
       case WalletType.haven:
-        return Uri.http(uriRaw!, '');
-      case WalletType.wownero:
         return Uri.http(uriRaw!, '');
       default:
         return null;
