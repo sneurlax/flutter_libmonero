@@ -25,7 +25,9 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
     CryptoCurrency.xlm,
     CryptoCurrency.xrp,
     CryptoCurrency.xhv,
-    CryptoCurrency.wow
+    CryptoCurrency.wow,
+    CryptoCurrency.txmr,
+    CryptoCurrency.sxmr
   ];
   static const xmr = CryptoCurrency(title: 'XMR', raw: 0);
   static const ada = CryptoCurrency(title: 'ADA', raw: 1);
@@ -59,6 +61,8 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
   static const xnzd = CryptoCurrency(title: 'XNZD', raw: 28);
   static const xusd = CryptoCurrency(title: 'XUSD', raw: 29);
   static const wow = CryptoCurrency(title: 'WOW', raw: 30);
+  static const txmr = CryptoCurrency(title: 'tXMR', raw: 31);
+  static const sxmr = CryptoCurrency(title: 'sXMR', raw: 32);
 
   static CryptoCurrency? deserialize({int? raw}) {
     switch (raw) {
@@ -124,6 +128,10 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
         return CryptoCurrency.xusd;
       case 30:
         return CryptoCurrency.wow;
+      case 31:
+        return CryptoCurrency.txmr;
+      case 32:
+        return CryptoCurrency.sxmr;
       default:
         return null;
     }
@@ -193,6 +201,10 @@ class CryptoCurrency extends EnumerableItem<int?> with Serializable<int?> {
         return CryptoCurrency.xusd;
       case 'wow':
         return CryptoCurrency.wow;
+      case 'txmr':
+        return CryptoCurrency.txmr;
+      case 'sxmr':
+        return CryptoCurrency.sxmr;
       default:
         return null;
     }
