@@ -14,7 +14,8 @@ import 'package:cw_core/wallet_info.dart';
 import 'package:cw_core/wallet_type.dart';
 
 class MoneroNewWalletCredentials extends WalletCredentials {
-  MoneroNewWalletCredentials({String? name, String? password, this.language})
+  MoneroNewWalletCredentials(
+      {String? name, String? password, this.language, int? nettype})
       : super(name: name, password: password);
 
   final String? language;
@@ -22,8 +23,12 @@ class MoneroNewWalletCredentials extends WalletCredentials {
 
 class MoneroRestoreWalletFromSeedCredentials extends WalletCredentials {
   MoneroRestoreWalletFromSeedCredentials(
-      {String? name, String? password, int? height, this.mnemonic})
-      : super(name: name, password: password, height: height);
+      {String? name,
+      String? password,
+      int? nettype,
+      int? height,
+      this.mnemonic})
+      : super(name: name, password: password, height: height, nettype: nettype);
 
   final String? mnemonic;
 }
@@ -41,6 +46,7 @@ class MoneroRestoreWalletFromKeysCredentials extends WalletCredentials {
       this.address,
       this.viewKey,
       this.spendKey,
+      int? nettype,
       int? height})
       : super(name: name, password: password, height: height);
 
@@ -57,7 +63,7 @@ class MoneroWalletService extends WalletService<
   MoneroWalletService(this.walletInfoSource);
 
   final Box<WalletInfo> walletInfoSource;
-  
+
   static bool walletFilesExist(String path) =>
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
@@ -65,13 +71,30 @@ class MoneroWalletService extends WalletService<
   WalletType getType() => WalletType.monero;
 
   @override
+  int getNettype() => 0;
+
+  @override
+  WalletType getWalletType(int nettype) {
+    if (nettype == 0) {
+      return WalletType.monero;
+    } else if (nettype == 1) {
+      return WalletType.moneroTestNet;
+    } else {
+      return WalletType.moneroStageNet;
+    }
+  }
+
+  @override
   Future<MoneroWallet> create(MoneroNewWalletCredentials credentials) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path = await pathForWallet(
+          name: credentials.name!,
+          type: getWalletType(credentials.nettype ?? 0));
       await monero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
-          language: credentials.language);
+          language: credentials.language,
+          nettype: credentials.nettype);
       final wallet = MoneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
@@ -84,9 +107,10 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<bool> isWalletExit(String name) async {
+  Future<bool> isWalletExit(String name, [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: name, type: getType());
+      final path =
+          await pathForWallet(name: name, type: getWalletType(nettype));
       return monero_wallet_manager.isWalletExist(path: path);
     } catch (e) {
       // TODO: Implement Exception for wallet list service.
@@ -96,16 +120,18 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<MoneroWallet> openWallet(String name, String password) async {
+  Future<MoneroWallet> openWallet(String name, String password,
+      [int nettype = 0]) async {
     try {
-      final path = await pathForWallet(name: name, type: getType());
+      final path =
+          await pathForWallet(name: name, type: getWalletType(nettype));
 
       if (walletFilesExist(path)) {
-        await repairOldAndroidWallet(name);
+        await repairOldAndroidWallet(name, nettype);
       }
 
-      await monero_wallet_manager
-          .openWalletAsync({'path': path, 'password': password});
+      await monero_wallet_manager.openWalletAsync(
+          {'path': path, 'password': password, 'nettype': nettype});
       final walletInfo = walletInfoSource.values.firstWhereOrNull(
           (info) => info.id == WalletBase.idFor(name, getType()))!;
       final wallet = MoneroWallet(walletInfo: walletInfo);
@@ -114,7 +140,7 @@ class MoneroWalletService extends WalletService<
       if (!isValid) {
         await restoreOrResetWalletFiles(name);
         wallet.close();
-        return openWallet(name, password);
+        return openWallet(name, password, nettype);
       }
 
       await wallet.init();
@@ -124,14 +150,14 @@ class MoneroWalletService extends WalletService<
       // TODO: Implement Exception for wallet list service.
 
       if ((e.toString().contains('bad_alloc') ||
-          (e is WalletOpeningException &&
-              (e.message == 'std::bad_alloc' ||
-                  e.message!.contains('bad_alloc')))) ||
+              (e is WalletOpeningException &&
+                  (e.message == 'std::bad_alloc' ||
+                      e.message!.contains('bad_alloc')))) ||
           (e.toString().contains('does not correspond') ||
-          (e is WalletOpeningException &&
-            e.message!.contains('does not correspond')))) {
+              (e is WalletOpeningException &&
+                  e.message!.contains('does not correspond')))) {
         await restoreOrResetWalletFiles(name);
-        return openWallet(name, password);
+        return openWallet(name, password, nettype);
       }
 
       rethrow;
@@ -139,8 +165,9 @@ class MoneroWalletService extends WalletService<
   }
 
   @override
-  Future<void> remove(String wallet) async {
-    final path = await pathForWalletDir(name: wallet, type: getType());
+  Future<void> remove(String wallet, [int nettype = 0]) async {
+    final path =
+        await pathForWalletDir(name: wallet, type: getWalletType(nettype));
     final file = Directory(path);
     final isExist = file.existsSync();
 
@@ -153,7 +180,9 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> restoreFromKeys(
       MoneroRestoreWalletFromKeysCredentials credentials) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path = await pathForWallet(
+          name: credentials.name!,
+          type: getWalletType(credentials.nettype ?? 0));
       await monero_wallet_manager.restoreFromKeys(
           path: path,
           password: credentials.password,
@@ -161,7 +190,8 @@ class MoneroWalletService extends WalletService<
           restoreHeight: credentials.height,
           address: credentials.address,
           viewKey: credentials.viewKey,
-          spendKey: credentials.spendKey);
+          spendKey: credentials.spendKey,
+          nettype: credentials.nettype);
       final wallet = MoneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
@@ -177,12 +207,15 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> restoreFromSeed(
       MoneroRestoreWalletFromSeedCredentials credentials) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path = await pathForWallet(
+          name: credentials.name!,
+          type: getWalletType(credentials.nettype ?? 0));
       await monero_wallet_manager.restoreFromSeed(
           path: path,
           password: credentials.password,
           seed: credentials.mnemonic,
-          restoreHeight: credentials.height);
+          restoreHeight: credentials.height,
+          nettype: credentials.nettype);
       final wallet = MoneroWallet(walletInfo: credentials.walletInfo!);
       await wallet.init();
 
@@ -194,7 +227,7 @@ class MoneroWalletService extends WalletService<
     }
   }
 
-  Future<void> repairOldAndroidWallet(String name) async {
+  Future<void> repairOldAndroidWallet(String name, int nettype) async {
     try {
       if (!Platform.isAndroid) {
         return;
@@ -209,7 +242,7 @@ class MoneroWalletService extends WalletService<
       }
 
       final newWalletDirPath =
-          await pathForWalletDir(name: name, type: getType());
+          await pathForWalletDir(name: name, type: getWalletType(nettype));
 
       dir.listSync().forEach((f) {
         final file = File(f.path);

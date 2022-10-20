@@ -12,9 +12,9 @@ abstract class WalletService<N extends WalletCredentials,
 
   Future<WalletBase> restoreFromKeys(RFK credentials);
 
-  Future<WalletBase> openWallet(String name, String password);
+  Future<WalletBase> openWallet(String name, String password, [int nettype]);
 
-  Future<bool> isWalletExit(String name);
+  Future<bool> isWalletExit(String name, [int nettype]);
 
-  Future<void> remove(String wallet);
+  Future<void> remove(String wallet, [int nettype]);
 }
