@@ -100,7 +100,7 @@ abstract class Monero {
   String getTransactionAddress(
       Object wallet, int accountIndex, int addressIndex);
 
-  int getHeigthByDate({DateTime? date});
+  int getHeightByDate({DateTime? date});
   TransactionPriority getDefaultTransactionPriority();
   TransactionPriority? deserializeMoneroTransactionPriority({int? raw});
   List<TransactionPriority> getTransactionPriorities();

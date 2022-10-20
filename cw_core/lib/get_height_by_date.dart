@@ -85,7 +85,7 @@ final dates = {
   "2020-11": 2220000
 };
 
-int getMoneroHeigthByDate({required DateTime date}) {
+int getMoneroHeightByDate({required DateTime date}) {
   final raw = '${date.year}' + '-' + '${date.month}';
   final lastHeight = dates.values.last;
   int? startHeight;

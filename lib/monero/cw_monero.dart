@@ -155,8 +155,8 @@ class CWMonero extends Monero {
     return CWMoneroWalletDetails(wallet);
   }
 
-  int getHeigthByDate({DateTime? date}) {
-    return getMoneroHeigthByDate(date: date!);
+  int getHeightByDate({DateTime? date}) {
+    return getMoneroHeightByDate(date: date!);
   }
 
   TransactionPriority getDefaultTransactionPriority() {
