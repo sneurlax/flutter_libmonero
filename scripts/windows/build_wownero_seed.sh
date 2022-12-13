@@ -32,5 +32,5 @@ x86_64-w64-mingw32.static-cmake \
 	ARCH=${ARCH} \
 	-D CMAKE_BUILD_TYPE=Release $FLAGS .
 
-make -Cbuild -j$THREADS
+make CROSS=x86_64-w64-mingw32.static- -Cbuild -j$THREADS
 make -Cbuild install

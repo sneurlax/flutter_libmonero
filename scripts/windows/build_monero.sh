@@ -58,7 +58,7 @@ x86_64-w64-mingw32.static-cmake \
 	-D INSTALL_VENDORED_LIBUNBOUND=ON \
 	-D BUILD_TAG=${TAG} $FLAGS ../..
 
-make wallet_api -j$THREADS
+make CROSS=x86_64-w64-mingw32.static- wallet_api -j$THREADS
 find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;
 
 cp -r ./lib/* $DEST_LIB_DIR
