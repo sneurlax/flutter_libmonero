@@ -19,3 +19,9 @@ else
   export TYPES_OF_BUILD="aarch64"
 fi
 export PREFIX=$WORKDIR/prefix_${TYPES_OF_BUILD}
+
+export CC=x86_64-w64-mingw32.static-gcc
+export CXX=x86_64-w64-mingw32.static-g++
+export HOST=x86_64-w64-mingw32
+export CROSS_COMPILE=x86_64-w64-mingw32.static-
+export CROSS=x86_64-w64-mingw32.static-
