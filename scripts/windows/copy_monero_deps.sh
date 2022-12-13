@@ -2,27 +2,16 @@
 
 WORKDIR="$(pwd)/"build
 CW_DIR="$(pwd)"/../../../flutter_libmonero
-CW_EXRTERNAL_DIR=${CW_DIR}/cw_shared_external/ios/External/android
+CW_EXTERNAL_DIR=${CW_DIR}/cw_shared_external/ios/External/android
 CW_MONERO_EXTERNAL_DIR=${CW_DIR}/cw_monero/ios/External/android
 for arch in $TYPES_OF_BUILD
 do
 
-PREFIX=${WORKDIR}/prefix_${arch}
-ABI=""
+ABI="x86_64";
 
-case $arch in
-	"aarch"	)
-		ABI="armeabi-v7a";;
-	"aarch64"	)
-		ABI="arm64-v8a";;
-	"i686"		)
-		ABI="x86";;
-	"x86_64"	)
-		ABI="x86_64";;
-esac
 
-LIB_DIR=${CW_EXRTERNAL_DIR}/${ABI}/lib
-INCLUDE_DIR=${CW_EXRTERNAL_DIR}/${ABI}/include
+LIB_DIR=${CW_EXTERNAL_DIR}/prefix_${ABI}/lib
+INCLUDE_DIR=${CW_EXTERNAL_DIR}/prefix_${ABI}/include
 
 mkdir -p $LIB_DIR
 mkdir -p $INCLUDE_DIR
