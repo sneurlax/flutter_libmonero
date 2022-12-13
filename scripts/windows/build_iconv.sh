@@ -17,16 +17,13 @@ rm -rf $ICONV_SRC_DIR
 tar -xzf $ICONV_FILE_PATH -C $WORKDIR
 cd $ICONV_SRC_DIR
 
-CC=x86_64-w64-mingw32-gcc
-CXX=x86_64-w64-mingw32-g++
-HOST=x86_64-w64-mingw32
-CROSS_COMPILE="x86_64-w64-mingw32.static-"
 ./configure \
 	--host=${HOST} \
 	--target=${HOST} \
 	--prefix=${PREFIX} \
 	--enable-static \
+	--disable-shared \
 	--disable-rpath \
 	--disable-nls
-make -j$THREADS
+make CROSS=x86_64-w64-mingw32.static- -j$THREADS
 make install
