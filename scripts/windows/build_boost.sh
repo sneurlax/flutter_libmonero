@@ -21,12 +21,8 @@ cd $BOOST_SRC_DIR
 
 ./bootstrap.sh --prefix="${PREFIX}" --with-toolset=gcc
 
-CC=x86_64-w64-mingw32-gcc
-CXX=x86_64-w64-mingw32-g++
-HOST=x86_64-w64-mingw32
-CROSS_COMPILE="x86_64-w64-mingw32.static-"
-CXXFLAGS=-fPIC
-CFLAGS=-fPIC
+export CXXFLAGS=-fPIC
+export CFLAGS=-fPIC
 ./b2 release -d2 \
 	cxxflags=-fPIC \
 	cflags=-fPIC \
@@ -59,6 +55,7 @@ CFLAGS=-fPIC
 	threadapi=pthread \
 	toolset=gcc-mingw \
 	-sICONV_PATH=${PREFIX} \
+	define=BOOST_USE_WINDOWS_H \
 	-j$THREADS install
 
 cd ${PREFIX}/lib
