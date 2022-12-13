@@ -5,17 +5,6 @@ BOOST_SRC_DIR=$WORKDIR/boost_1_78_0
 BOOST_FILENAME=boost_1_78_0.tar.bz2
 BOOST_VERSION=1.78.0
 
-for arch in $TYPES_OF_BUILD
-do
-
-PREFIX=$WORKDIR/prefix_${arch}
-# put the outputs into dev/null since it overrides githubs workflow test log
-
-ARCH=$1
-PREFIX=$2
-BOOST_SRC_DIR=$3
-BOOST_FILENAME=$4
-BOOST_VERSION=$5
 BOOST_FILE_PATH=$WORKDIR/$BOOST_FILENAME
 BOOST_SHA256="8681f175d4bdb26c52222665793eef08490d7758529330f98d3b29dd0735bccc"
 
@@ -35,6 +24,3 @@ cd $BOOST_SRC_DIR
 cd $BOOST_SRC_DIR
 
 ./b2 cxxflags=-fPIC cflags=-fPIC --verbose --build-type=minimal link=static runtime-link=static --with-chrono --with-date_time --with-filesystem --with-program_options --with-regex --with-serialization --with-system --with-thread --with-locale --build-dir=android --stagedir=android threading=multi threadapi=pthread target-os=linux -sICONV_PATH=${PREFIX} -j$THREADS install
-
-
-done

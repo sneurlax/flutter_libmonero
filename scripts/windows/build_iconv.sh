@@ -12,20 +12,6 @@ fi
 
 echo $ICONV_SHA256 $ICONV_FILE_PATH | sha256sum -c - || exit 1
 
-for arch in $TYPES_OF_BUILD
-do
-
-PREFIX=${WORKDIR}/prefix_${arch}
-
-case $arch in
-	"x86_64"	)
-        HOST="x86_64-linux-gnu";;
-	"aarch64"	)
-        HOST="aarch64-linux-gnu";;
-	*		)
-		HOST="x86_64-linux-gnu";;
-esac 
-
 cd $WORKDIR
 rm -rf $ICONV_SRC_DIR
 tar -xzf $ICONV_FILE_PATH -C $WORKDIR
@@ -33,6 +19,3 @@ cd $ICONV_SRC_DIR
 ./configure --build=${HOST} --host=${HOST} --prefix=${PREFIX} --disable-rpath
 make -j$THREADS
 make install
-
-done
-

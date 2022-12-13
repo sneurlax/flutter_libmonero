@@ -25,23 +25,13 @@ fi
 
 echo $OPENSSL_SHA256 $OPENSSL_FILE_PATH | sha256sum -c - || exit 1
 
-for arch in $TYPES_OF_BUILD
-do
-PREFIX=$WORKDIR/prefix_${arch}
-
-case $arch in
-	"x86_64")  X_ARCH="linux-x86_64";;
-	"aarch64")  X_ARCH="linux-aarch64";;
-	*)	   X_ARCH="linux-x86_64";;
-esac
-
 cd $WORKDIR
 rm -rf $OPENSSL_SRC_DIR
 tar -xzf $OPENSSL_FILE_PATH -C $WORKDIR
 cd $OPENSSL_SRC_DIR
 
 #sed -i -e "s/mandroid/target\ ${TARGET}\-linux\-android/" Configure
-	./Configure ${X_ARCH} \
+./Configure ${X_ARCH} \
 	no-shared no-tests \
 	--with-zlib-include=${PREFIX}/include \
 	--with-zlib-lib=${PREFIX}/lib \
@@ -49,6 +39,3 @@ cd $OPENSSL_SRC_DIR
 	--openssldir=${PREFIX}
 make -j$THREADS
 make -j$THREADS install_sw
-
-done
-

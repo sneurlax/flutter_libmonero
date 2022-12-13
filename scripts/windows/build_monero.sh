@@ -9,10 +9,7 @@ cd $MONERO_SRC_DIR
 git submodule init
 git submodule update
 
-for arch in $TYPES_OF_BUILD
-do
 FLAGS=""
-PREFIX=${WORKDIR}/prefix_${arch}
 DEST_LIB_DIR=${PREFIX}/lib/monero
 DEST_INCLUDE_DIR=${PREFIX}/include/monero
 export CMAKE_INCLUDE_PATH="${PREFIX}/include"
@@ -25,18 +22,10 @@ if [ -f "$LIBUNBOUND_PATH" ]; then
   cp $LIBUNBOUND_PATH $DEST_LIB_DIR
 fi
 
-case $arch in
-	"x86_64"	)
-		BUILD_64=ON
-		TAG="linux-x86_64"
-		ARCH="x86-64"
-		ARCH_ABI="x86_64";;
-	"aarch64"	)
-		BUILD_64=ON
-		TAG="linux-aarch64"
-		ARCH="aarch64"
-		ARCH_ABI="aarch64";;
-esac
+BUILD_64=ON
+TAG="win-x64"
+ARCH="x86-64"
+ARCH_ABI="x86_64"
 
 cd $MONERO_SRC_DIR
 rm -rf ./build/release
@@ -54,4 +43,3 @@ CW_DIR="$(pwd)"/../../../../../../../flutter_libmonero
 CW_MONERO_EXTERNAL_DIR=${CW_DIR}/cw_monero/ios/External/android
 mkdir -p $CW_MONERO_EXTERNAL_DIR/include
 cp ../../src/wallet/api/wallet2_api.h ${CW_MONERO_EXTERNAL_DIR}/include
-done
