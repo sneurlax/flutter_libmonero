@@ -18,7 +18,7 @@ rm -rf $MONERO_SRC_DIR
 git clone ${MONERO_REPO} ${MONERO_SRC_DIR} --branch ${MONERO_BRANCH}
 cd $MONERO_SRC_DIR
 if [[ -v MONERO_SHA_HEAD ]]; then
-	git reset --hard $WOWNERO_SHA_HEAD
+	git reset --hard $MONERO_SHA_HEAD
 fi
 git submodule init
 git submodule update
@@ -46,10 +46,6 @@ rm -rf ./build/release
 mkdir -p ./build/release
 cd ./build/release
 
-CC=x86_64-w64-mingw32-gcc
-CXX=x86_64-w64-mingw32-g++
-HOST=x86_64-w64-mingw32
-CROSS_COMPILE="x86_64-w64-mingw32.static-"
 x86_64-w64-mingw32.static-cmake \
 	-DCMAKE_FIND_ROOT_PATH="${PREFIX};${PREFIX}/include;${PREFIX}/lib" \
 	-DCMAKE_CXX_FLAGS="-fPIC" \
