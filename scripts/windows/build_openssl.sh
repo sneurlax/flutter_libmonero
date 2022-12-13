@@ -27,13 +27,10 @@ echo $OPENSSL_SHA256 $OPENSSL_FILE_PATH | sha256sum -c - || exit 1
 cd $WORKDIR
 rm -rf $OPENSSL_SRC_DIR
 tar -xzf $OPENSSL_FILE_PATH -C $WORKDIR
-
 cd $OPENSSL_SRC_DIR
 
-CC=x86_64-w64-mingw32-gcc
-CXX=x86_64-w64-mingw32-g++
-HOST=x86_64-w64-mingw32
-CROSS_COMPILE="x86_64-w64-mingw32.static-"
+CC=gcc
+# CXX=g++
 ./Configure mingw64 \
 	no-shared \
 	no-tests \
@@ -60,8 +57,10 @@ CROSS_COMPILE="x86_64-w64-mingw32.static-"
 	--with-zlib-lib=${PREFIX}/lib \
 	--prefix=${WORKDIR}/openssl \
 	--openssldir=${WORKDIR}/openssl \
-	OPENSSL_LIBS="-lcrypt32 -lgdi32 -lwsock32 -lws2_32"
-make -j$THREADS
+	OPENSSL_LIBS="-lcrypt32 -lgdi32 -lwsock32 -lws2_32" # \
+	# no-stdio \
+	# no-sock
+make CROSS=x86_64-w64-mingw32.static- -j$THREADS
 make -j$THREADS install_sw
 
 cp -r ${WORKDIR}/openssl/* ${PREFIX} 
