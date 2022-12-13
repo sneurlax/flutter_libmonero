@@ -1,6 +1,7 @@
 #!/bin/sh
 
 . ./config.sh
+
 MONERO_BRANCH=release-v0.18.0.0-android
 MONERO_SRC_DIR=${WORKDIR}/monero
 

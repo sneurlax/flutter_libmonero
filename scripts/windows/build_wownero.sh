@@ -1,9 +1,10 @@
 #!/bin/sh
 
 . ./config.sh
+
 WOWNERO_VERSION=fix-armv7a-compile
-WOWNERO_SRC_DIR=${WORKDIR}/wownero
 WOWNERO_SHA_HEAD="373b8842c6075c54cc4904b147f1c86daf7cb60d"
+WOWNERO_SRC_DIR=${WORKDIR}/wownero
 
 git clone https://git.wownero.com/wownero/wownero.git ${WOWNERO_SRC_DIR} --branch ${WOWNERO_VERSION}
 cd $WOWNERO_SRC_DIR
