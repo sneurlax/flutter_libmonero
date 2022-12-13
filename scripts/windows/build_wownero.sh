@@ -29,7 +29,18 @@ cd $WOWNERO_SRC_DIR
 rm -rf ./build/release
 mkdir -p ./build/release
 cd ./build/release
-cmake -DCMAKE_CXX_FLAGS="-fPIC" -D USE_DEVICE_TREZOR=OFF -D BUILD_GUI_DEPS=1 -D BUILD_TESTS=OFF -D ARCH=${ARCH} -D STATIC=ON -D BUILD_64=${BUILD_64} -D CMAKE_BUILD_TYPE=release -D INSTALL_VENDORED_LIBUNBOUND=ON -D BUILD_TAG=${TAG} $FLAGS ../..
+cmake \
+	-DCMAKE_CXX_FLAGS="-fPIC" \
+	-D USE_DEVICE_TREZOR=OFF \
+	-D BUILD_GUI_DEPS=1 \
+	-D BUILD_TESTS=OFF \
+	-D ARCH=${ARCH} \
+	-D STATIC=ON \
+	-D BUILD_64=${BUILD_64} \
+	-D CMAKE_BUILD_TYPE=release \
+	-D INSTALL_VENDORED_LIBUNBOUND=ON \
+	-D BUILD_TAG=${TAG} \
+	$FLAGS ../..
 
 make wallet_api -j$THREADS
 find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;

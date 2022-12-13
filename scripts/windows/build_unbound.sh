@@ -18,7 +18,15 @@ test `git rev-parse HEAD` = ${EXPAT_HASH} || exit 1
 cd $EXPAT_SRC_DIR/expat
 
 ./buildconf.sh
-CC=clang CXX=clang++ ./configure CFLAGS=-fPIC CXXFLAGS=-fPIC --enable-static --disable-shared --prefix=${PREFIX} --host=${HOST}
+CC=clang
+CXX=clang++
+./configure \
+	CFLAGS=-fPIC \
+	CXXFLAGS=-fPIC \
+	--enable-static \
+	--disable-shared \
+	--prefix=${PREFIX} \
+	--host=${HOST}
 make -j$THREADS
 make -j$THREADS install
 
@@ -41,6 +49,12 @@ CC=clang CXX=clang++
 ./configure \
 	CFLAGS=-fPIC \
 	CXXFLAGS=-fPIC \
-CC=clang CXX=clang++ ./configure CFLAGS=-fPIC CXXFLAGS=-fPIC --prefix=${PREFIX} --host=${HOST} --enable-static --disable-shared --disable-flto --with-ssl=${PREFIX} --with-libexpat=${PREFIX}
+	--prefix=${PREFIX} \
+	--host=${HOST} \
+	--enable-static \
+	--disable-shared \
+	--disable-flto \
+	--with-ssl=${PREFIX} \
+	--with-libexpat=${PREFIX}
 make -j$THREADS
 make -j$THREADS install

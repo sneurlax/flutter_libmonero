@@ -25,7 +25,13 @@ git clone -b $SEED_TAG --depth 1 https://git.wownero.com/wowlet/wownero-seed.git
 cd $SEED_DIR
 git reset --hard $SEED_COMMIT_HASH
 
-CFLAGS=-fPIC CXXFLAGS=-fPIC cmake -Bbuild -DCMAKE_INSTALL_PREFIX=${PREFIX} ARCH=${ARCH} -D CMAKE_BUILD_TYPE=Release $FLAGS .
+CFLAGS=-fPIC CXXFLAGS=-fPIC
+cmake \
+	-Bbuild \
+	-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+	ARCH=${ARCH} \
+	-D CMAKE_BUILD_TYPE=Release \
+	$FLAGS .
 
 make -Cbuild -j$THREADS
 make -Cbuild install
