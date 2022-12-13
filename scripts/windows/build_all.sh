@@ -1,6 +1,8 @@
 #!/bin/bash
 
-mkdir build
+mkdir -p build
+mkdir -p cache
+
 ./build_iconv.sh
 ./build_boost.sh
 ./build_zlib.sh
