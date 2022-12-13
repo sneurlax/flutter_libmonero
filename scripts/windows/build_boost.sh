@@ -10,7 +10,31 @@ do
 
 PREFIX=$WORKDIR/prefix_${arch}
 # put the outputs into dev/null since it overrides githubs workflow test log
-./init_boost.sh $arch $PREFIX $BOOST_SRC_DIR $BOOST_FILENAME $BOOST_VERSION  > /dev/null
-./finish_boost.sh $arch $PREFIX $BOOST_SRC_DIR $BOOST_SRC_DIR  > /dev/null
+
+ARCH=$1
+PREFIX=$2
+BOOST_SRC_DIR=$3
+BOOST_FILENAME=$4
+BOOST_VERSION=$5
+BOOST_FILE_PATH=$WORKDIR/$BOOST_FILENAME
+BOOST_SHA256="8681f175d4bdb26c52222665793eef08490d7758529330f98d3b29dd0735bccc"
+
+if [ ! -e "$BOOST_FILE_PATH" ]; then
+	curl -L http://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION}/${BOOST_FILENAME} > $BOOST_FILE_PATH
+fi
+
+echo $BOOST_SHA256 $BOOST_FILE_PATH | sha256sum -c - || exit 1
+
+cd $WORKDIR
+rm -rf $BOOST_SRC_DIR
+rm -rf $PREFIX/include/boost
+tar -xvf $BOOST_FILE_PATH -C $WORKDIR
+cd $BOOST_SRC_DIR
+./bootstrap.sh --prefix=${PREFIX}
+
+cd $BOOST_SRC_DIR
+
+./b2 cxxflags=-fPIC cflags=-fPIC --verbose --build-type=minimal link=static runtime-link=static --with-chrono --with-date_time --with-filesystem --with-program_options --with-regex --with-serialization --with-system --with-thread --with-locale --build-dir=android --stagedir=android threading=multi threadapi=pthread target-os=linux -sICONV_PATH=${PREFIX} -j$THREADS install
+
 
 done
