@@ -36,16 +36,14 @@ sudo apt-get install -y \
   xz-utils \
   g++-multilib \
   libc6-dev-i386 \
-  lzip \
-  gcc-mingw-w64-x86-64 \
-  g++-mingw-w64-x86-64
+  lzip
 
 # Install MXE
 mkdir -p ~/development
 cd ~/development
 git clone https://github.com/mxe/mxe.git
 cd mxe
-make cc cmake MXE_TARGETS='x86_64-w64-mingw32.static'
+make cc cmake gcc MXE_TARGETS='x86_64-w64-mingw32.static' # g++
 if ! [[ $PATH == *"/mxe"* ]]; then
   echo 'export PATH="$HOME/development/mxe/usr/bin:$PATH"' >> ~/.bashrc  # Prepend to PATH
   source ~/.bashrc
