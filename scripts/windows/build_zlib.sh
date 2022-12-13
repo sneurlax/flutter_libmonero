@@ -14,8 +14,8 @@ git reset --hard $ZLIB_COMMIT_HASH
 
 sed 's/PREFIX =/PREFIX = x86_64-w64-mingw32.static-/' -i win32/Makefile.gcc
 
-CC=x86_64-w64-mingw32-gcc
-CXX=x86_64-w64-mingw32-g++
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
 HOST=x86_64-w64-mingw32
 CROSS_COMPILE="x86_64-w64-mingw32.static-"
 : '
@@ -31,7 +31,9 @@ make -f win32/Makefile.gcc
 	INCLUDE_PATH=/usr/x86_64-w64-mingw32/include \
 	LIBRARY_PATH=/usr/x86_64-w64-mingw32/lib \
 	PREFIX=x86_64-w64-mingw32.static- \
+	CROSS=x86_64-w64-mingw32.static- \
 	make -f win32/Makefile.gcc install # See https://stackoverflow.com/a/26021820
+
 cp -r ${PREFIX}/usr/x86_64-w64-mingw32/* ${PREFIX}
 rm -rf ${PREFIX}/usr # 👻
 
