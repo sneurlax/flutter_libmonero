@@ -35,6 +35,7 @@ test `git rev-parse HEAD` = ${UNBOUND_HASH} || exit 1
 	--disable-flto \
 	--with-pic \
 	--with-ssl=${PREFIX} \
-	--with-libexpat=${PREFIX}
+	--with-libexpat=${PREFIX} \
+	LDFLAGS="-lws2_32 -liphlpapi -lrpcrt4" 
 make CROSS=x86_64-w64-mingw32.static- -j$THREADS
 make install
