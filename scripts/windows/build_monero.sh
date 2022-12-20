@@ -5,6 +5,7 @@
 MONERO_BRANCH=release-v0.18.0.0-android
 MONERO_SRC_DIR=${WORKDIR}/monero
 
+rm -rf ${MONERO_SRC_DIR}
 git clone https://github.com/cake-tech/monero.git ${MONERO_SRC_DIR} --branch ${MONERO_BRANCH}
 cd $MONERO_SRC_DIR
 git submodule init
