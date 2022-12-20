@@ -12,6 +12,9 @@ git clone https://github.com/zeromq/libzmq.git ${ZMQ_SRC_DIR} -b ${ZMQ_BRANCH}
 cd $ZMQ_SRC_DIR
 git checkout ${ZMQ_COMMIT_HASH}
 
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./autogen.sh
 ./configure \
 	--prefix=${PREFIX} \

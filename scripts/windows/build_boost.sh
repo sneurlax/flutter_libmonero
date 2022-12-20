@@ -26,6 +26,9 @@ cd $BOOST_SRC_DIR
 
 # See https://gist.github.com/Shauren/5c28f646bf7a28b470a8 for boost link flags (add -lws2_32?)
 
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./b2 \
 	cxxflags=-fPIC \
 	cflags=-fPIC \

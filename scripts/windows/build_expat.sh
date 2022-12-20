@@ -16,6 +16,8 @@ cd $EXPAT_SRC_DIR/expat
 ./buildconf.sh
 #CC=clang CXX=clang++
 CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./configure \
 	CFLAGS=-fPIC \
 	CXXFLAGS=-fPIC \

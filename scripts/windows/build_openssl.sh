@@ -22,7 +22,9 @@ tar -xzf $OPENSSL_FILE_PATH -C $WORKDIR
 cd $OPENSSL_SRC_DIR
 
 #sed -i -e "s/mandroid/target\ ${TARGET}\-linux\-android/" Configure
-CC=gcc
+CC=gcc # x86_64-w64-mingw32.static-gcc
+CXX=g++ # x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./Configure mingw64 \
 	no-shared \
 	no-tests \

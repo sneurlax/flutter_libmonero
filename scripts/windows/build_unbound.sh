@@ -14,7 +14,9 @@ git clone https://github.com/NLnetLabs/unbound.git -b ${UNBOUND_VERSION} ${UNBOU
 cd $UNBOUND_SRC_DIR
 test `git rev-parse HEAD` = ${UNBOUND_HASH} || exit 1
 
-CC=clang CXX=clang++
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./configure \
 	CFLAGS=-fPIC \
 	CXXFLAGS=-fPIC \

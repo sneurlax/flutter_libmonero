@@ -17,6 +17,7 @@ sed 's/PREFIX =/PREFIX = x86_64-w64-mingw32.static-/' -i win32/Makefile.gcc
 
 HOST=x86_64-w64-mingw32
 CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
 : '
 ./configure \
 	--static \

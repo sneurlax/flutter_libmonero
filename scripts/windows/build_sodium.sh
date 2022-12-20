@@ -10,6 +10,9 @@ rm -rf $SODIUM_SRC_DIR
 git clone https://github.com/jedisct1/libsodium.git $SODIUM_SRC_DIR -b $SODIUM_BRANCH
 cd $SODIUM_SRC_DIR
 
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./autogen.sh
 ./configure \
 	--prefix=${PREFIX} \

@@ -22,6 +22,9 @@ rm -rf $ICONV_SRC_DIR
 tar -xzf $ICONV_FILE_PATH -C $WORKDIR
 cd $ICONV_SRC_DIR
 
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
 ./configure \
 	--host=${HOST} \
 	--prefix=${PREFIX} \
