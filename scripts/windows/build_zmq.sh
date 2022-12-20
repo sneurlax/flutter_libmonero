@@ -17,9 +17,17 @@ CXX=x86_64-w64-mingw32.static-g++
 HOST=x86_64-w64-mingw32
 ./autogen.sh
 ./configure \
+	--without-documentation \
+	--without-docs \
+	--disable-shared \
+	#--disable-curve \
 	--prefix=${PREFIX} \
 	--host=${HOST} \
 	--enable-static \
-	--disable-shared
+	--with-pic #\
+	#CFLAGS="-Wall -Wno-pedantic-ms-format -DLIBCZMQ_EXPORTS -DZMQ_DEFINED_STDINT"
 make -j$THREADS
 make install
+
+# See http://vrecan.github.io/post/crosscompile_go_zeromq/
+# See https://stackoverflow.com/questions/21322707/zlib-header-not-found-when-cross-compiling-with-mingw
