@@ -14,7 +14,8 @@ test `git rev-parse HEAD` = ${EXPAT_HASH} || exit 1
 cd $EXPAT_SRC_DIR/expat
 
 ./buildconf.sh
-CC=clang CXX=clang++
+#CC=clang CXX=clang++
+CC=x86_64-w64-mingw32.static-gcc
 ./configure \
 	CFLAGS=-fPIC \
 	CXXFLAGS=-fPIC \
