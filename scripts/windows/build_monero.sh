@@ -32,7 +32,12 @@ cd $MONERO_SRC_DIR
 rm -rf ./build/release
 mkdir -p ./build/release
 cd ./build/release
-cmake \
+
+CC=x86_64-w64-mingw32.static-gcc
+CXX=x86_64-w64-mingw32.static-g++
+HOST=x86_64-w64-mingw32
+x86_64-w64-mingw32.static-cmake \
+	-DCMAKE_FIND_ROOT_PATH="${PREFIX};${PREFIX}/include;${PREFIX}/lib" \
 	-DCMAKE_CXX_FLAGS="-fPIC" \
 	-D USE_DEVICE_TREZOR=OFF \
 	-D BUILD_GUI_DEPS=1 \
