@@ -12,7 +12,7 @@
 void __clear_cache(void* start, void* end) { }
 #include "../../../cw_shared_external/ios/External/ios/include/monero/wallet2_api.h"
 #else
-#include "../External/android/include/wallet2_api.h"
+#include "wallet2_api.h"
 #endif
 #ifdef linux
 #include <string.h>
@@ -312,7 +312,6 @@ extern "C"
 
     bool load_wallet(char *path, char *password, int32_t nettype)
     {
-        nice(19);
         Monero::NetworkType networkType = static_cast<Monero::NetworkType>(nettype);
         Monero::WalletManager *walletManager = Monero::WalletManagerFactory::getWalletManager();
         Monero::Wallet *wallet = walletManager->openWallet(std::string(path), std::string(password), networkType);
@@ -399,7 +398,6 @@ extern "C"
 
     bool connect_to_node(char *error)
     {
-        nice(19);
         bool is_connected = get_current_wallet()->connectToDaemon();
 
         if (!is_connected)
@@ -412,7 +410,6 @@ extern "C"
 
     bool setup_node(char *address, char *login, char *password, bool use_ssl, bool is_light_wallet, char *error)
     {
-        nice(19);
         Monero::Wallet *wallet = get_current_wallet();
         
         std::string _login = "";
@@ -491,8 +488,7 @@ extern "C"
     bool transaction_create(char *address, char *payment_id, char *amount,
                                               uint8_t priority_raw, uint32_t subaddr_account, Utf8Box &error, PendingTransactionRaw &pendingTransaction)
     {
-        nice(19);
-        
+
         auto priority = static_cast<Monero::PendingTransaction::Priority>(priority_raw);
         std::string _payment_id;
         Monero::PendingTransaction *transaction;
