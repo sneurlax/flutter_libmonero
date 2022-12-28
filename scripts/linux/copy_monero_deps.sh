@@ -35,7 +35,4 @@ mkdir -p ${CW_MONERO_EXTERNAL_DIR}/include
 
 cp $PREFIX/include/monero/wallet2_api.h ${CW_MONERO_EXTERNAL_DIR}/include
 
-cp ./cmakefiles/monero/cw_monero_export.h ${PREFIX}/include
-cp ./cmakefiles/wownero/cw_wownero_export.h ${PREFIX}/include
-
 done
