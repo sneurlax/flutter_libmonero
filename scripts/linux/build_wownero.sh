@@ -54,6 +54,7 @@ find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;
 
 cp -r ./lib/* $DEST_LIB_DIR
 cp ../../src/wallet/api/wallet2_api.h  $DEST_INCLUDE_DIR
+cp -r $CMAKE_LIBRARY_PATH/*.a $DEST_LIB_DIR
 
 CW_DIR="$(pwd)"/../../../../../../../flutter_libmonero
 CW_WOWNERO_EXTERNAL_DIR=${CW_DIR}/cw_wownero/ios/External/android	
