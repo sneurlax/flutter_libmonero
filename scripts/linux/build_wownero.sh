@@ -25,6 +25,10 @@ export CMAKE_LIBRARY_PATH="${PREFIX}/lib"
 
 mkdir -p $DEST_LIB_DIR
 mkdir -p $DEST_INCLUDE_DIR
+LIBUNBOUND_PATH=${PREFIX}/lib/libunbound.a
+if [ -f "$LIBUNBOUND_PATH" ]; then
+  cp $LIBUNBOUND_PATH $DEST_LIB_DIR
+fi
 
 case $arch in
 	"x86_64"	)
