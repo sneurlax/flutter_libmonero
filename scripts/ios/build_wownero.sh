@@ -53,11 +53,11 @@ cmake -D IOS=ON \
 	-DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
 	-DSTATIC=ON \
 	-DBUILD_GUI_DEPS=ON \
-	-DINSTALL_VENDORED_LIBUNBOUND=ON \
+	-DUNBOUND_INCLUDE_DIR=${EXTERNAL_IOS_INCLUDE_DIR} \
 	-DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}  \
     -DUSE_DEVICE_TREZOR=OFF \
 	../..
-make -j$(nproc) && make install
+make wallet_api -j$(nproc) && make install
 find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;
 cp -r ./lib/* $DEST_LIB_DIR
 cp src/cryptonote_basic/libcryptonote_basic.a ${DEST_LIB}
