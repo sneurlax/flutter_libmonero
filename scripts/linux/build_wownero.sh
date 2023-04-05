@@ -3,11 +3,11 @@
 . ./config.sh
 
 WOWNERO_URL="https://git.wownero.com/wownero/wownero.git"
-WOWNERO_VERSION=v0.10.2.0
-WOWNERO_SHA_HEAD="ab42be18f25c7bdfa6171a890ad11ae262bc44d0"
+WOWNERO_VERSION=v0.11.0.1
+WOWNERO_SHA_HEAD="a21819cc22587e16af00e2c3d8f70156c11310a0"
 WOWNERO_SRC_DIR=${WORKDIR}/wownero
 
-echo "Cloning wownero from - $WOWNERO_URL to - $WOWNERO_DIR_PATH"		
+echo "Cloning wownero from - $WOWNERO_URL to - $WOWNERO_SRC_DIR"		
 git clone ${WOWNERO_URL} ${WOWNERO_SRC_DIR} --branch ${WOWNERO_VERSION}
 cd $WOWNERO_SRC_DIR
 git reset --hard $WOWNERO_SHA_HEAD
@@ -25,6 +25,10 @@ export CMAKE_LIBRARY_PATH="${PREFIX}/lib"
 
 mkdir -p $DEST_LIB_DIR
 mkdir -p $DEST_INCLUDE_DIR
+LIBUNBOUND_PATH=${PREFIX}/lib/libunbound.a
+if [ -f "$LIBUNBOUND_PATH" ]; then
+  cp $LIBUNBOUND_PATH $DEST_LIB_DIR
+fi
 
 case $arch in
 	"x86_64"	)
@@ -50,6 +54,7 @@ find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;
 
 cp -r ./lib/* $DEST_LIB_DIR
 cp ../../src/wallet/api/wallet2_api.h  $DEST_INCLUDE_DIR
+cp -r $CMAKE_LIBRARY_PATH/*.a $DEST_LIB_DIR
 
 CW_DIR="$(pwd)"/../../../../../../../flutter_libmonero
 CW_WOWNERO_EXTERNAL_DIR=${CW_DIR}/cw_wownero/ios/External/android	
