@@ -13,6 +13,7 @@ import 'package:cw_core/sync_status.dart';
 import 'package:cw_core/transaction_priority.dart';
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/wallet_type.dart';
 import 'package:cw_monero/api/monero_output.dart';
 import 'package:cw_monero/api/structs/pending_transaction.dart';
 import 'package:cw_monero/api/transaction_history.dart'
@@ -265,7 +266,7 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
   Future<bool> save({bool prioritySave = false}) async {
     print("save is called");
     await walletAddresses.updateAddressesInBox();
-    await backupWalletFiles(name!);
+    await backupWalletFiles(name: name!, type: WalletType.monero);
     return await monero_wallet.store(prioritySave: prioritySave);
   }
 

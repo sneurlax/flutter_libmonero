@@ -1,17 +1,17 @@
 import 'dart:io';
+
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/monero_wallet_utils.dart';
-import 'package:hive/hive.dart';
-import 'package:cw_wownero/api/wallet_manager.dart' as wownero_wallet_manager;
-import 'package:cw_wownero/api/wallet.dart' as wownero_wallet;
-import 'package:cw_wownero/api/exceptions/wallet_opening_exception.dart';
-import 'package:cw_wownero/wownero_wallet.dart';
-import 'package:cw_core/wallet_credentials.dart';
-import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/pathForWallet.dart';
+import 'package:cw_core/wallet_base.dart';
+import 'package:cw_core/wallet_credentials.dart';
 import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/wallet_type.dart';
+import 'package:cw_wownero/api/exceptions/wallet_opening_exception.dart';
+import 'package:cw_wownero/api/wallet_manager.dart' as wownero_wallet_manager;
+import 'package:cw_wownero/wownero_wallet.dart';
+import 'package:hive/hive.dart';
 
 class WowneroNewWalletCredentials extends WalletCredentials {
   WowneroNewWalletCredentials(
@@ -117,7 +117,7 @@ class WowneroWalletService extends WalletService<
       final isValid = wallet.walletAddresses.validate();
 
       if (!isValid) {
-        await restoreOrResetWalletFiles(name);
+        await restoreOrResetWalletFiles(name: name, type: WalletType.wownero);
         wallet.close();
         return openWallet(name, password);
       }
@@ -135,7 +135,7 @@ class WowneroWalletService extends WalletService<
           (e.toString().contains('does not correspond') ||
               (e is WalletOpeningException &&
                   e.message!.contains('does not correspond')))) {
-        await restoreOrResetWalletFiles(name);
+        await restoreOrResetWalletFiles(name: name, type: WalletType.wownero);
         return openWallet(name, password);
       }
 
