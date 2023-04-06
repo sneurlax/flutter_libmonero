@@ -11,6 +11,7 @@ import 'package:cw_core/sync_status.dart';
 import 'package:cw_core/transaction_priority.dart';
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/wallet_type.dart';
 import 'package:cw_wownero/api/structs/pending_transaction.dart';
 import 'package:cw_wownero/api/transaction_history.dart'
     as wownero_transaction_history;
@@ -122,7 +123,7 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
   @override
   void close() {
     _listener?.stop();
-    _onAccountChangeReaction?.reaction?.dispose();
+    _onAccountChangeReaction?.reaction.dispose();
     _autoSaveTimer?.cancel();
   }
 
@@ -138,7 +139,7 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
           useSSL: node.isSSL,
           isLightWallet: false); // FIXME: hardcoded value
 
-      wownero_wallet.setTrustedDaemon(node.trusted);
+      await wownero_wallet.setTrustedDaemon(node.trusted);
       syncStatus = ConnectedSyncStatus();
       syncStatusChanged?.call();
     } catch (e) {
@@ -265,7 +266,7 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
   Future<bool> save({bool prioritySave = false}) async {
     print("save is called");
     await walletAddresses.updateAddressesInBox();
-    await backupWalletFiles(name!);
+    await backupWalletFiles(name: name!, type: WalletType.wownero);
     return await wownero_wallet.store(prioritySave: prioritySave);
   }
 
