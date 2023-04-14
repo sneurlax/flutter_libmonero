@@ -13,6 +13,7 @@ cd $WOWNERO_SRC_DIR
 git reset --hard $WOWNERO_SHA_HEAD
 git submodule init
 git submodule update
+git apply ../../../../patches/wownero/refresh_thread.patch
 
 for arch in "aarch" "aarch64" "i686" "x86_64"
 do
