@@ -13,7 +13,7 @@ cd $WOWNERO_SRC_DIR
 git reset --hard $WOWNERO_SHA_HEAD
 git submodule init
 git submodule update
-git apply ../../../../patches/wownero/refresh_thread.patch
+git apply --stat --apply ${CW_ROOT}/patches/wownero/refresh_thread.patch
 
 for arch in $TYPES_OF_BUILD
 do
