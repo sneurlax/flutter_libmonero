@@ -18,6 +18,7 @@ cd $WOWNERO_SRC_DIR
 git reset --hard $WOWNERO_SHA_HEAD
 git checkout $WOWNERO_VERSION
 git submodule update --init --force
+git apply --stat --apply ${CW_ROOT}/patches/wownero/refresh_thread.patch
 mkdir -p build
 cd ..
 
