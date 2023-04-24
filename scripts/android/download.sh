@@ -20,9 +20,9 @@ WOWNERO_BIN=libcw_wownero.so
 
 for TARGET in arm64-v8a armeabi-v7a x86_64
 do
-  ARCH_PATH=$TARGET/release
-  if [ $(git tag -l $TARGET"_$TAG_COMMIT") ]; then
-    git checkout $TARGET"_$TAG_COMMIT"
+  ARCH_PATH=$TARGET
+  if [ $(git tag -l "${OS}_${TARGET}_${TAG_COMMIT}") ]; then
+    git checkout "${OS}_${TARGET}_${TAG_COMMIT}"
     mkdir -p ../$LINUX_LIBS_DIR/$ARCH_PATH
     if [ -f "$OS/$ARCH_PATH/$MONERO_BIN" ]; then
       # TODO verify bin checksum hashes
