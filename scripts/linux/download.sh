@@ -3,7 +3,6 @@
 . ./config.sh
 
 OS=linux
-
 TAG_COMMIT=$(git log -1 --pretty=format:"%H")
 
 rm -rf flutter_libmonero_bins
@@ -17,9 +16,7 @@ fi
 
 MONERO_BIN=libcw_monero.so
 WOWNERO_BIN=libcw_wownero.so
-
 TARGET=$TYPES_OF_BUILD
-
 ARCH_PATH=$TARGET
 
 if [ $(git tag -l "${OS}_${TARGET}_${TAG_COMMIT}") ]; then

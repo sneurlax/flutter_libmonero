@@ -14,9 +14,9 @@ else
   exit 1
 fi
 
-TARGET_PATH=../build
 MONERO_BIN=libcw_monero.so
 WOWNERO_BIN=libcw_wownero.so
+TARGET_PATH=../build
 TARGET=$TYPES_OF_BUILD
 
 if [ $(git tag -l "${OS}_${TARGET}_${TAG_COMMIT}") ]; then
