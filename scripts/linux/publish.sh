@@ -32,7 +32,7 @@ else
     cp -rf "$TARGET_PATH/$MONERO_BIN" "$OS/$ARCH_PATH/$MONERO_BIN"
     cp -rf "$TARGET_PATH/$WOWNERO_BIN" "$OS/$ARCH_PATH/$WOWNERO_BIN"
     git add .
-    git commit -m "$OS $TARGET commit for $TAG_COMMIT"
+      git push origin $OS/$TARGET
     git push origin $OS/$TARGET
     git tag "${OS}_${TARGET}_${TAG_COMMIT}"
     git push --tags
