@@ -21,22 +21,21 @@ WOWNERO_BIN=libcw_wownero.so
 for TARGET in arm64-v8a armeabi-v7a x86_64
 do
   ARCH_PATH=$TARGET
-  if [ $(git tag -l "${OS}_${TARGET}_${TAG_COMMIT}") ]; then
-    git checkout "${OS}_${TARGET}_${TAG_COMMIT}"
-    mkdir -p ../$LINUX_LIBS_DIR/$ARCH_PATH
-    if [ -f "$OS/$ARCH_PATH/$MONERO_BIN" ]; then
-      # TODO verify bin checksum hashes
-      cp -rf "$OS/$ARCH_PATH/$MONERO_BIN" ../build/
-    else
-      echo "$TARGET $MONERO_BIN not found!"
-    fi
-    if [ -f "$OS/$ARCH_PATH/$WOWNERO_BIN" ]; then
-      # TODO verify bin checksum hashes
-      cp -rf "$OS/$ARCH_PATH/$WOWNERO_BIN" ../build/
-    else
-      echo "$TARGET $WOWNERO_BIN not found!"
-    fi
+  if [ ! $(git tag -l "${OS}_${TARGET}_${TAG_COMMIT}") ]; then
+      echo "No precompiled bins for $TAG_COMMIT found, using latest for $OS/$TARGET!"
+  fi
+  git checkout "${OS}_${TARGET}_${TAG_COMMIT}" || git checkout $OS/$TARGET
+  mkdir -p ../$LINUX_LIBS_DIR/$ARCH_PATH
+  if [ -f "$OS/$ARCH_PATH/$MONERO_BIN" ]; then
+    # TODO verify bin checksum hashes
+    cp -rf "$OS/$ARCH_PATH/$MONERO_BIN" ../build/
   else
-    echo "No precompiled bins for $TARGET found!"
+    echo "$TARGET not found at $OS/$ARCH_PATH/$MONERO_BIN!"
+  fi
+  if [ -f "$OS/$ARCH_PATH/$WOWNERO_BIN" ]; then
+    # TODO verify bin checksum hashes
+    cp -rf "$OS/$ARCH_PATH/$WOWNERO_BIN" ../build/
+  else
+    echo "$TARGET not found at $OS/$ARCH_PATH/$WOWNERO_BIN!"
   fi
 done
