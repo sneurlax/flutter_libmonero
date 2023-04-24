@@ -24,7 +24,7 @@ do
     ARCH_PATH=$TARGET
 
     if [ -f "$TARGET_PATH/$MONERO_BIN" -a -f "$TARGET_PATH/$WOWNERO_BIN" ]; then
-      git checkout "$OS/$TARGET" || git checkout -b "$OS/$TARGET"
+      git checkout "${OS}_${TARGET}_${TAG_COMMIT}" || git checkout -b "${OS}_${TARGET}_${TAG_COMMIT}"
       if [ ! -d "$OS/$ARCH_PATH" ]; then
         mkdir -p "$OS/$ARCH_PATH"
       fi
