@@ -7,6 +7,7 @@
 #include <mutex>
 #include "thread"
 #include "CwWalletListener.h"
+
 #if __APPLE__
 // Fix for randomx on ios
 void __clear_cache(void* start, void* end) { }
@@ -173,8 +174,6 @@ extern "C"
         uint64_t amount;
         uint64_t fee;
         char *hash;
-        char *hex;
-        char *txKey;
         Monero::PendingTransaction *transaction;
 
         PendingTransactionRaw(Monero::PendingTransaction *_transaction)
@@ -183,8 +182,6 @@ extern "C"
             amount = _transaction->amount();
             fee = _transaction->fee();
             hash = strdup(_transaction->txid()[0].c_str());
-            hex = strdup(_transaction->hex()[0].c_str());
-            txKey = strdup(_transaction->txKey()[0].c_str());
         }
     };
 
@@ -316,7 +313,7 @@ extern "C"
 
     CW_MONERO_EXPORT bool load_wallet(char *path, char *password, int32_t nettype)
     {
-        // nice(19);
+        nice(19);
         Monero::NetworkType networkType = static_cast<Monero::NetworkType>(nettype);
         Monero::WalletManager *walletManager = Monero::WalletManagerFactory::getWalletManager();
         Monero::Wallet *wallet = walletManager->openWallet(std::string(path), std::string(password), networkType);
@@ -403,7 +400,7 @@ extern "C"
 
     CW_MONERO_EXPORT bool connect_to_node(char *error)
     {
-        // nice(19);
+        nice(19);
         bool is_connected = get_current_wallet()->connectToDaemon();
 
         if (!is_connected)
@@ -416,7 +413,7 @@ extern "C"
 
     CW_MONERO_EXPORT bool setup_node(char *address, char *login, char *password, bool use_ssl, bool is_light_wallet, char *error)
     {
-        // nice(19);
+        nice(19);
         Monero::Wallet *wallet = get_current_wallet();
         
         std::string _login = "";
@@ -495,7 +492,7 @@ extern "C"
     CW_MONERO_EXPORT bool transaction_create(char *address, char *payment_id, char *amount,
                                               uint8_t priority_raw, uint32_t subaddr_account, Utf8Box &error, PendingTransactionRaw &pendingTransaction)
     {
-        // nice(19);
+        nice(19);
         
         auto priority = static_cast<Monero::PendingTransaction::Priority>(priority_raw);
         std::string _payment_id;
@@ -535,7 +532,7 @@ extern "C"
     CW_MONERO_EXPORT bool transaction_create_mult_dest(char **addresses, char *payment_id, char **amounts, uint32_t size,
                                                   uint8_t priority_raw, uint32_t subaddr_account, Utf8Box &error, PendingTransactionRaw &pendingTransaction)
     {
-        // nice(19);
+        nice(19);
 
         std::vector<std::string> _addresses;
         std::vector<uint64_t> _amounts;
@@ -797,6 +794,16 @@ extern "C"
     }
 
     CW_MONERO_EXPORT bool validate_address(char *address)
+    {
+        m_wallet->setTrustedDaemon(arg);
+    }
+
+    bool trusted_daemon()
+    {
+        return m_wallet->trustedDaemon();
+    }
+
+    bool validate_address(char *address)
     {
         return get_current_wallet()->addressValid(std::string(address), 0); // TODO fix like by making the command below work or by otherwise detecting nettype
         //return get_current_wallet()->validateAddress(std::string(address));

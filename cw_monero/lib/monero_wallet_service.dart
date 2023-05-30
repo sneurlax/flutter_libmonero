@@ -1,17 +1,17 @@
 import 'dart:io';
+
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/monero_wallet_utils.dart';
-import 'package:hive/hive.dart';
-import 'package:cw_monero/api/wallet_manager.dart' as monero_wallet_manager;
-import 'package:cw_monero/api/wallet.dart' as monero_wallet;
-import 'package:cw_monero/api/exceptions/wallet_opening_exception.dart';
-import 'package:cw_monero/monero_wallet.dart';
-import 'package:cw_core/wallet_credentials.dart';
-import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/pathForWallet.dart';
+import 'package:cw_core/wallet_base.dart';
+import 'package:cw_core/wallet_credentials.dart';
 import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/wallet_service.dart';
 import 'package:cw_core/wallet_type.dart';
+import 'package:cw_monero/api/exceptions/wallet_opening_exception.dart';
+import 'package:cw_monero/api/wallet_manager.dart' as monero_wallet_manager;
+import 'package:cw_monero/monero_wallet.dart';
+import 'package:hive/hive.dart';
 
 class MoneroNewWalletCredentials extends WalletCredentials {
   MoneroNewWalletCredentials({String? name, String? password, this.language})
@@ -57,7 +57,7 @@ class MoneroWalletService extends WalletService<
   MoneroWalletService(this.walletInfoSource);
 
   final Box<WalletInfo> walletInfoSource;
-  
+
   static bool walletFilesExist(String path) =>
       !File(path).existsSync() && !File('$path.keys').existsSync();
 
@@ -67,7 +67,8 @@ class MoneroWalletService extends WalletService<
   @override
   Future<MoneroWallet> create(MoneroNewWalletCredentials credentials) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path =
+          await pathForWallet(name: credentials.name!, type: getType());
       await monero_wallet_manager.createWallet(
           path: path,
           password: credentials.password,
@@ -112,7 +113,7 @@ class MoneroWalletService extends WalletService<
       final isValid = wallet.walletAddresses.validate();
 
       if (!isValid) {
-        await restoreOrResetWalletFiles(name);
+        await restoreOrResetWalletFiles(name: name, type: WalletType.monero);
         wallet.close();
         return openWallet(name, password);
       }
@@ -124,13 +125,13 @@ class MoneroWalletService extends WalletService<
       // TODO: Implement Exception for wallet list service.
 
       if ((e.toString().contains('bad_alloc') ||
-          (e is WalletOpeningException &&
-              (e.message == 'std::bad_alloc' ||
-                  e.message!.contains('bad_alloc')))) ||
+              (e is WalletOpeningException &&
+                  (e.message == 'std::bad_alloc' ||
+                      e.message!.contains('bad_alloc')))) ||
           (e.toString().contains('does not correspond') ||
-          (e is WalletOpeningException &&
-            e.message!.contains('does not correspond')))) {
-        await restoreOrResetWalletFiles(name);
+              (e is WalletOpeningException &&
+                  e.message!.contains('does not correspond')))) {
+        await restoreOrResetWalletFiles(name: name, type: WalletType.monero);
         return openWallet(name, password);
       }
 
@@ -153,7 +154,8 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> restoreFromKeys(
       MoneroRestoreWalletFromKeysCredentials credentials) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path =
+          await pathForWallet(name: credentials.name!, type: getType());
       await monero_wallet_manager.restoreFromKeys(
           path: path,
           password: credentials.password,
@@ -177,7 +179,8 @@ class MoneroWalletService extends WalletService<
   Future<MoneroWallet> restoreFromSeed(
       MoneroRestoreWalletFromSeedCredentials credentials) async {
     try {
-      final path = await pathForWallet(name: credentials.name!, type: getType());
+      final path =
+          await pathForWallet(name: credentials.name!, type: getType());
       await monero_wallet_manager.restoreFromSeed(
           path: path,
           password: credentials.password,

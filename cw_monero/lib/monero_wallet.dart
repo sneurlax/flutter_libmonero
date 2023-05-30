@@ -13,6 +13,7 @@ import 'package:cw_core/sync_status.dart';
 import 'package:cw_core/transaction_priority.dart';
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/wallet_type.dart';
 import 'package:cw_monero/api/monero_output.dart';
 import 'package:cw_monero/api/structs/pending_transaction.dart';
 import 'package:cw_monero/api/transaction_history.dart'
@@ -89,17 +90,9 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
   late bool _hasSyncAfterStartup;
   Timer? _autoSaveTimer;
 
-  void Function()? _onNewBlock1;
-  void Function()? _onNewTransaction1;
-  void Function()? _syncStatusChanged1;
-
-  void Function()? get onNewBlock => _onNewBlock1;
-  void Function()? get onNewTransaction => _onNewTransaction1;
-  void Function()? get syncStatusChanged => _syncStatusChanged1;
-
-  set onNewBlock(void Function()? cb) => _onNewBlock1 = cb;
-  set onNewTransaction(void Function()? cb) => _onNewTransaction1 = cb;
-  set syncStatusChanged(void Function()? cb) => _syncStatusChanged1 = cb;
+  void Function({required int height, required int blocksLeft})? onNewBlock;
+  void Function()? onNewTransaction;
+  void Function()? syncStatusChanged;
 
   Future<void> init() async {
     await walletAddresses.init();
@@ -145,6 +138,8 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
           password: node.password,
           useSSL: node.isSSL,
           isLightWallet: false); // FIXME: hardcoded value
+
+      monero_wallet.setTrustedDaemon(node.trusted);
       syncStatus = ConnectedSyncStatus();
       syncStatusChanged?.call();
     } catch (e) {
@@ -271,7 +266,7 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
   Future<bool> save({bool prioritySave = false}) async {
     print("save is called");
     await walletAddresses.updateAddressesInBox();
-    await backupWalletFiles(name!);
+    await backupWalletFiles(name: name!, type: WalletType.monero);
     return await monero_wallet.store(prioritySave: prioritySave);
   }
 
@@ -438,7 +433,7 @@ abstract class MoneroWalletBase extends WalletBase<MoneroBalance,
     } catch (e) {
       print(e.toString());
     }
-    onNewBlock?.call();
+    onNewBlock?.call(height: height, blocksLeft: blocksLeft);
   }
 
   void _onNewTransaction() async {

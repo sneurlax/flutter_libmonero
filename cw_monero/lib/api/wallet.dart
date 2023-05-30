@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:cw_monero/api/convert_utf8_to_string.dart';
 import 'package:cw_monero/api/exceptions/setup_wallet_exception.dart';
@@ -121,6 +122,14 @@ final rescanBlockchainAsyncNative = moneroApi
 final getSubaddressLabelNative = moneroApi
     .lookup<NativeFunction<get_subaddress_label>>('get_subaddress_label')
     .asFunction<GetSubaddressLabel>();
+
+final setTrustedDaemonNative = moneroApi
+    .lookup<NativeFunction<set_trusted_daemon>>('set_trusted_daemon')
+    .asFunction<SetTrustedDaemon>();
+
+final trustedDaemonNative = moneroApi
+    .lookup<NativeFunction<trusted_daemon>>('trusted_daemon')
+    .asFunction<TrustedDaemon>();
 
 final validateAddressNative = moneroApi
     .lookup<NativeFunction<validate_address>>('validate_address')
@@ -358,23 +367,26 @@ int storeTime = 0;
 bool priorityInQueue = false;
 
 Future<bool> store({bool prioritySave = false}) async {
-  // if (priorityInQueue) {
-  //   return false;
-  // }
-  // print(
-  //     "${DateTime.now().millisecondsSinceEpoch} $prioritySave $priorityInQueue");
-  // if (DateTime.now().millisecondsSinceEpoch < storeTime + 90000 &&
-  //     prioritySave) {
-  //   priorityInQueue = true;
-  //   await Future.delayed(Duration(seconds: 1));
-  //   priorityInQueue = false;
-  //   return store(prioritySave: prioritySave);
-  // } else if (DateTime.now().millisecondsSinceEpoch < storeTime + 90000 &&
-  //     !prioritySave) {
-  //   return false;
-  // }
-  // print("released $storeTime");
-  // storeTime = DateTime.now().millisecondsSinceEpoch;
+  // Delay saves
+  if (Platform.isAndroid) {
+    if (priorityInQueue) {
+      return false;
+    }
+    print(
+        "${DateTime.now().millisecondsSinceEpoch} $prioritySave $priorityInQueue");
+    if (DateTime.now().millisecondsSinceEpoch < storeTime + 90000 &&
+        prioritySave) {
+      priorityInQueue = true;
+      await Future.delayed(Duration(seconds: 1));
+      priorityInQueue = false;
+      return store(prioritySave: prioritySave);
+    } else if (DateTime.now().millisecondsSinceEpoch < storeTime + 90000 &&
+        !prioritySave) {
+      return false;
+    }
+    print("released $storeTime");
+    storeTime = DateTime.now().millisecondsSinceEpoch;
+  }
   await compute<int, void>(_storeSync, 0);
   return true;
 }
@@ -389,6 +401,11 @@ String getSubaddressLabel(int accountIndex, int addressIndex) {
   return convertUTF8ToString(
       pointer: getSubaddressLabelNative(accountIndex, addressIndex));
 }
+
+Future setTrustedDaemon(bool trusted) async =>
+    setTrustedDaemonNative(_boolToInt(trusted));
+
+Future<bool> trustedDaemon() async => trustedDaemonNative() != 0;
 
 bool validateAddress(String address) {
   final addressPointer = address.toNativeUtf8();

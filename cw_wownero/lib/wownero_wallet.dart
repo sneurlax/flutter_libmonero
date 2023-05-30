@@ -11,6 +11,7 @@ import 'package:cw_core/sync_status.dart';
 import 'package:cw_core/transaction_priority.dart';
 import 'package:cw_core/wallet_base.dart';
 import 'package:cw_core/wallet_info.dart';
+import 'package:cw_core/wallet_type.dart';
 import 'package:cw_wownero/api/structs/pending_transaction.dart';
 import 'package:cw_wownero/api/transaction_history.dart'
     as wownero_transaction_history;
@@ -26,7 +27,6 @@ import 'package:cw_wownero/wownero_transaction_creation_exception.dart';
 import 'package:cw_wownero/wownero_transaction_history.dart';
 import 'package:cw_wownero/wownero_transaction_info.dart';
 import 'package:cw_wownero/wownero_wallet_addresses.dart';
-import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 
 part 'wownero_wallet.g.dart';
@@ -90,6 +90,10 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
   late bool _hasSyncAfterStartup;
   Timer? _autoSaveTimer;
 
+  void Function({required int height, required int blocksLeft})? onNewBlock;
+  void Function()? onNewTransaction;
+  void Function()? syncStatusChanged;
+
   Future<void> init() async {
     await walletAddresses.init();
     balance = ObservableMap<CryptoCurrency?, WowneroBalance>.of(<
@@ -112,14 +116,14 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
       }
     }
 
-    _autoSaveTimer = Timer.periodic(
-        Duration(seconds: _autoSaveInterval), (_) async => await save());
+    // _autoSaveTimer = Timer.periodic(
+    //     Duration(seconds: _autoSaveInterval), (_) async => await save());
   }
 
   @override
   void close() {
     _listener?.stop();
-    _onAccountChangeReaction?.reaction?.dispose();
+    _onAccountChangeReaction?.reaction.dispose();
     _autoSaveTimer?.cancel();
   }
 
@@ -127,15 +131,20 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
   Future<void> connectToNode({required Node node}) async {
     try {
       syncStatus = ConnectingSyncStatus();
+      syncStatusChanged?.call();
       await wownero_wallet.setupNode(
           address: node.uri.toString(),
           login: node.login,
           password: node.password,
           useSSL: node.isSSL,
           isLightWallet: false); // FIXME: hardcoded value
+
+      await wownero_wallet.setTrustedDaemon(node.trusted);
       syncStatus = ConnectedSyncStatus();
+      syncStatusChanged?.call();
     } catch (e) {
       syncStatus = FailedSyncStatus();
+      syncStatusChanged?.call();
       print(e);
     }
   }
@@ -151,8 +160,10 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
       wownero_wallet.startRefresh();
       _setListeners();
       _listener?.start();
+      syncStatusChanged?.call();
     } catch (e) {
       syncStatus = FailedSyncStatus();
+      syncStatusChanged?.call();
       print(e);
       rethrow;
     }
@@ -255,7 +266,7 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
   Future<bool> save({bool prioritySave = false}) async {
     print("save is called");
     await walletAddresses.updateAddressesInBox();
-    await backupWalletFiles(name!);
+    await backupWalletFiles(name: name!, type: WalletType.wownero);
     return await wownero_wallet.store(prioritySave: prioritySave);
   }
 
@@ -408,6 +419,7 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
         _askForUpdateBalance();
         walletAddresses.accountList.update();
         syncStatus = SyncedSyncStatus();
+        syncStatusChanged?.call();
 
         if (!_hasSyncAfterStartup) {
           _hasSyncAfterStartup = true;
@@ -419,10 +431,12 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
         }
       } else {
         syncStatus = SyncingSyncStatus(blocksLeft, ptc, height);
+        syncStatusChanged?.call();
       }
     } catch (e) {
       print(e.toString());
     }
+    onNewBlock?.call(height: height, blocksLeft: blocksLeft);
   }
 
   void _onNewTransaction() async {
@@ -433,5 +447,6 @@ abstract class WowneroWalletBase extends WalletBase<WowneroBalance,
     } catch (e) {
       print(e.toString());
     }
+    onNewTransaction?.call();
   }
 }
