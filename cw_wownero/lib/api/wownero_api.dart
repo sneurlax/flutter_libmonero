@@ -9,6 +9,8 @@ DynamicLibrary get wowneroApi {
   return Platform.isWindows
     ? DynamicLibrary.open("libcw_monero.dll")
     : Platform.isAndroid || Platform.isLinux
+      ? DynamicLibrary.open("libcw_monero.so")
+      : DynamicLibrary.open("cw_monero.framework/cw_monero");
       ? DynamicLibrary.open("libcw_wownero.so")
       : DynamicLibrary.open("cw_wownero.framework/cw_wownero");
 }
