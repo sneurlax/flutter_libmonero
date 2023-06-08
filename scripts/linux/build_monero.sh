@@ -46,16 +46,17 @@ cd $MONERO_SRC_DIR
 rm -rf ./build/release
 mkdir -p ./build/release
 cd ./build/release
+
+CW_DIR="$(pwd)"/../../../../../../../flutter_libmonero
+CW_MONERO_EXTERNAL_DIR=${CW_DIR}/cw_monero/ios/External/android
+mkdir -p $CW_MONERO_EXTERNAL_DIR/include
+cp ../../src/wallet/api/wallet2_api.h $DEST_INCLUDE_DIR
+cp ../../src/wallet/api/wallet2_api.h ${CW_MONERO_EXTERNAL_DIR}/include
+
 cmake -DCMAKE_CXX_FLAGS="-fPIC" -D USE_DEVICE_TREZOR=OFF -D BUILD_GUI_DEPS=1 -D BUILD_TESTS=OFF -D ARCH=${ARCH} -D BUILD_64=${BUILD_64} -D CMAKE_BUILD_TYPE=release -D INSTALL_VENDORED_LIBUNBOUND=ON -D BUILD_TAG=${TAG} $FLAGS ../..
     
 make wallet_api -j$THREADS
 find . -path ./lib -prune -o -name '*.a' -exec cp '{}' lib \;
 
 cp -r ./lib/* $DEST_LIB_DIR
-cp ../../src/wallet/api/wallet2_api.h  $DEST_INCLUDE_DIR
-
-CW_DIR="$(pwd)"/../../../../../../../flutter_libmonero
-CW_MONERO_EXTERNAL_DIR=${CW_DIR}/cw_monero/ios/External/android
-mkdir -p $CW_MONERO_EXTERNAL_DIR/include
-cp ../../src/wallet/api/wallet2_api.h ${CW_MONERO_EXTERNAL_DIR}/include
 done
