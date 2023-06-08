@@ -14,6 +14,8 @@ OS="WINDOWS"
 sed -i "/\/\*${OS}_VERSION/c\\/\*${OS}_VERSION\*\/ const ${OS}_VERSION = \"$COMMIT\";" $VERSIONS_FILE
 
 cd ${WORKDIR}
+git apply nice.patch
+
 mkdir -p monero_build
 mkdir -p wownero_build
 MONERO_BUILD=${WORKDIR}/monero_build
